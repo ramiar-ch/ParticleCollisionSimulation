@@ -16,8 +16,10 @@ namespace ParticleSim
         public StartMenu()
         {
             InitializeComponent();
+            
         }
 
+        
         
     }
 }

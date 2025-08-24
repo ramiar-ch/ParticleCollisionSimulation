@@ -90,6 +90,9 @@
     <Compile Include="TwoDCollisions.Designer.cs">
       <DependentUpon>TwoDCollisions.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="HelpGuide.resx">
+      <DependentUpon>HelpGuide.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="StartMenu.resx">
       <DependentUpon>StartMenu.cs</DependentUpon>
     </EmbeddedResource>

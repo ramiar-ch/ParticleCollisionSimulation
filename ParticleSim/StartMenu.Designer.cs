@@ -53,6 +53,7 @@
             this.btn1D.TabIndex = 0;
             this.btn1D.Text = "1D Collisions";
             this.btn1D.UseVisualStyleBackColor = false;
+            this.btn1D.Click += new System.EventHandler(this.Navigate);
             // 
             // btn2D
             // 
@@ -68,6 +69,7 @@
             this.btn2D.TabIndex = 1;
             this.btn2D.Text = "2D Collisions";
             this.btn2D.UseVisualStyleBackColor = false;
+            this.btn2D.Click += new System.EventHandler(this.Navigate);
             // 
             // btnRelativistic
             // 
@@ -83,6 +85,7 @@
             this.btnRelativistic.TabIndex = 2;
             this.btnRelativistic.Text = "Relativistic Collisions";
             this.btnRelativistic.UseVisualStyleBackColor = false;
+            this.btnRelativistic.Click += new System.EventHandler(this.Navigate);
             // 
             // btnGaseous
             // 
@@ -98,6 +101,7 @@
             this.btnGaseous.TabIndex = 3;
             this.btnGaseous.Text = "Gaseous Collisions";
             this.btnGaseous.UseVisualStyleBackColor = false;
+            this.btnGaseous.Click += new System.EventHandler(this.Navigate);
             // 
             // titleMenu
             // 
@@ -107,7 +111,7 @@
             this.titleMenu.ForeColor = System.Drawing.Color.White;
             this.titleMenu.Location = new System.Drawing.Point(76, 100);
             this.titleMenu.Name = "titleMenu";
-            this.titleMenu.Size = new System.Drawing.Size(514, 45);
+            this.titleMenu.Size = new System.Drawing.Size(606, 45);
             this.titleMenu.TabIndex = 4;
             this.titleMenu.Text = "Particle Collision Simulator";
             // 
@@ -117,11 +121,12 @@
             this.btnSettings.FlatAppearance.BorderSize = 0;
             this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSettings.Image = ((System.Drawing.Image)(resources.GetObject("btnSettings.Image")));
-            this.btnSettings.Location = new System.Drawing.Point(577, 34);
+            this.btnSettings.Location = new System.Drawing.Point(583, 33);
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(42, 43);
+            this.btnSettings.Size = new System.Drawing.Size(58, 43);
             this.btnSettings.TabIndex = 5;
             this.btnSettings.UseVisualStyleBackColor = false;
+            this.btnSettings.Click += new System.EventHandler(this.Navigate);
             // 
             // btnFolder
             // 
@@ -130,11 +135,12 @@
             this.btnFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnFolder.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnFolder.Image = ((System.Drawing.Image)(resources.GetObject("btnFolder.Image")));
-            this.btnFolder.Location = new System.Drawing.Point(539, 34);
+            this.btnFolder.Location = new System.Drawing.Point(530, 33);
             this.btnFolder.Name = "btnFolder";
-            this.btnFolder.Size = new System.Drawing.Size(40, 43);
+            this.btnFolder.Size = new System.Drawing.Size(51, 43);
             this.btnFolder.TabIndex = 6;
             this.btnFolder.UseVisualStyleBackColor = false;
+            this.btnFolder.Click += new System.EventHandler(this.Navigate);
             // 
             // btnHelpGuide
             // 
@@ -142,18 +148,19 @@
             this.btnHelpGuide.FlatAppearance.BorderSize = 0;
             this.btnHelpGuide.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHelpGuide.Image = ((System.Drawing.Image)(resources.GetObject("btnHelpGuide.Image")));
-            this.btnHelpGuide.Location = new System.Drawing.Point(505, 40);
+            this.btnHelpGuide.Location = new System.Drawing.Point(481, 34);
             this.btnHelpGuide.Name = "btnHelpGuide";
-            this.btnHelpGuide.Size = new System.Drawing.Size(31, 31);
+            this.btnHelpGuide.Size = new System.Drawing.Size(42, 40);
             this.btnHelpGuide.TabIndex = 7;
             this.btnHelpGuide.UseVisualStyleBackColor = false;
+            this.btnHelpGuide.Click += new System.EventHandler(this.Navigate);
             // 
             // StartMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
-            this.ClientSize = new System.Drawing.Size(663, 453);
+            this.ClientSize = new System.Drawing.Size(668, 453);
             this.Controls.Add(this.btnHelpGuide);
             this.Controls.Add(this.btnFolder);
             this.Controls.Add(this.btnSettings);

@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OneDCollisions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OneDCollisions.Designer.cs">
+      <DependentUpon>OneDCollisions.cs</DependentUpon>
+    </Compile>
     <Compile Include="StartMenu.cs">
       <SubType>Form</SubType>
     </Compile>

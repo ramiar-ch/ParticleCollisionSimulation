@@ -35,7 +35,6 @@
             this.btnGaseous = new System.Windows.Forms.Button();
             this.titleMenu = new System.Windows.Forms.TextBox();
             this.btnSettings = new System.Windows.Forms.Button();
-            this.btnFolder = new System.Windows.Forms.Button();
             this.btnHelpGuide = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -128,27 +127,13 @@
             this.btnSettings.UseVisualStyleBackColor = false;
             this.btnSettings.Click += new System.EventHandler(this.Navigate);
             // 
-            // btnFolder
-            // 
-            this.btnFolder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
-            this.btnFolder.FlatAppearance.BorderSize = 0;
-            this.btnFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFolder.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.btnFolder.Image = ((System.Drawing.Image)(resources.GetObject("btnFolder.Image")));
-            this.btnFolder.Location = new System.Drawing.Point(530, 33);
-            this.btnFolder.Name = "btnFolder";
-            this.btnFolder.Size = new System.Drawing.Size(51, 43);
-            this.btnFolder.TabIndex = 6;
-            this.btnFolder.UseVisualStyleBackColor = false;
-            this.btnFolder.Click += new System.EventHandler(this.Navigate);
-            // 
             // btnHelpGuide
             // 
             this.btnHelpGuide.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
             this.btnHelpGuide.FlatAppearance.BorderSize = 0;
             this.btnHelpGuide.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnHelpGuide.Image = ((System.Drawing.Image)(resources.GetObject("btnHelpGuide.Image")));
-            this.btnHelpGuide.Location = new System.Drawing.Point(481, 34);
+            this.btnHelpGuide.Location = new System.Drawing.Point(536, 34);
             this.btnHelpGuide.Name = "btnHelpGuide";
             this.btnHelpGuide.Size = new System.Drawing.Size(42, 40);
             this.btnHelpGuide.TabIndex = 7;
@@ -162,7 +147,6 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
             this.ClientSize = new System.Drawing.Size(668, 453);
             this.Controls.Add(this.btnHelpGuide);
-            this.Controls.Add(this.btnFolder);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.titleMenu);
             this.Controls.Add(this.btnGaseous);
@@ -184,7 +168,6 @@
         private System.Windows.Forms.Button btnGaseous;
         private System.Windows.Forms.TextBox titleMenu;
         private System.Windows.Forms.Button btnSettings;
-        private System.Windows.Forms.Button btnFolder;
         private System.Windows.Forms.Button btnHelpGuide;
     }
 }

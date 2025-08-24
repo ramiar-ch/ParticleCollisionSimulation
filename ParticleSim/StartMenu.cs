@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ParticleSim.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,24 +18,28 @@ namespace ParticleSim
         {
             InitializeComponent();
 
-            // navigationMap is a variable required for the Navigate() method
+            // navigationMap is a dictionary required for the Navigate() method
             navigationMap = new Dictionary<Button, Func<Form>>
             {
                 { btn1D, () => new OneDCollisions() },
-                { btn2D, () => new OneDCollisions() },              // replace this with TwoDCollisions()
-                { btnRelativistic, () => new OneDCollisions() },    // replace this with RelativisticCollisions()
-                { btnGaseous, () => new OneDCollisions() }          // replace this with GaseousCollisions()
+                { btn2D, () => new TwoDCollisions() },              
+                { btnRelativistic, () => new RelativisticCollisions() },   
+                { btnGaseous, () => new GaseousCollisions() },        
+                { btnHelpGuide, () => new HelpGuide() },       
+                { btnSettings, () => new Settings() }         
             };
         }
 
         // Navigate() is a single method that handles all button click events
-        private void Navigate(object sender, EventArgs e)
+        public void Navigate(object sender, EventArgs e)
         {
+            // validation so that events only come from buttons
             if (!(sender is Button clickedButton))
             {
                 return;
             }
 
+            // checks if the clicked button is in the navigationMap, and opens corresponding form
             if (navigationMap.ContainsKey(clickedButton))
             {
                 Form nextForm = navigationMap[clickedButton]();

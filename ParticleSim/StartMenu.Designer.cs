@@ -28,11 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StartMenu));
             this.btn1D = new System.Windows.Forms.Button();
             this.btn2D = new System.Windows.Forms.Button();
             this.btnRelativistic = new System.Windows.Forms.Button();
             this.btnGaseous = new System.Windows.Forms.Button();
             this.titleMenu = new System.Windows.Forms.TextBox();
+            this.btnSettings = new System.Windows.Forms.Button();
+            this.btnFolder = new System.Windows.Forms.Button();
+            this.btnHelpGuide = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btn1D
@@ -107,12 +111,52 @@
             this.titleMenu.TabIndex = 4;
             this.titleMenu.Text = "Particle Collision Simulator";
             // 
+            // btnSettings
+            // 
+            this.btnSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
+            this.btnSettings.FlatAppearance.BorderSize = 0;
+            this.btnSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSettings.Image = ((System.Drawing.Image)(resources.GetObject("btnSettings.Image")));
+            this.btnSettings.Location = new System.Drawing.Point(577, 34);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(42, 43);
+            this.btnSettings.TabIndex = 5;
+            this.btnSettings.UseVisualStyleBackColor = false;
+            // 
+            // btnFolder
+            // 
+            this.btnFolder.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
+            this.btnFolder.FlatAppearance.BorderSize = 0;
+            this.btnFolder.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFolder.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnFolder.Image = ((System.Drawing.Image)(resources.GetObject("btnFolder.Image")));
+            this.btnFolder.Location = new System.Drawing.Point(539, 34);
+            this.btnFolder.Name = "btnFolder";
+            this.btnFolder.Size = new System.Drawing.Size(40, 43);
+            this.btnFolder.TabIndex = 6;
+            this.btnFolder.UseVisualStyleBackColor = false;
+            // 
+            // btnHelpGuide
+            // 
+            this.btnHelpGuide.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
+            this.btnHelpGuide.FlatAppearance.BorderSize = 0;
+            this.btnHelpGuide.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHelpGuide.Image = ((System.Drawing.Image)(resources.GetObject("btnHelpGuide.Image")));
+            this.btnHelpGuide.Location = new System.Drawing.Point(505, 40);
+            this.btnHelpGuide.Name = "btnHelpGuide";
+            this.btnHelpGuide.Size = new System.Drawing.Size(31, 31);
+            this.btnHelpGuide.TabIndex = 7;
+            this.btnHelpGuide.UseVisualStyleBackColor = false;
+            // 
             // StartMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
             this.ClientSize = new System.Drawing.Size(663, 453);
+            this.Controls.Add(this.btnHelpGuide);
+            this.Controls.Add(this.btnFolder);
+            this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.titleMenu);
             this.Controls.Add(this.btnGaseous);
             this.Controls.Add(this.btnRelativistic);
@@ -132,6 +176,9 @@
         private System.Windows.Forms.Button btnRelativistic;
         private System.Windows.Forms.Button btnGaseous;
         private System.Windows.Forms.TextBox titleMenu;
+        private System.Windows.Forms.Button btnSettings;
+        private System.Windows.Forms.Button btnFolder;
+        private System.Windows.Forms.Button btnHelpGuide;
     }
 }
 

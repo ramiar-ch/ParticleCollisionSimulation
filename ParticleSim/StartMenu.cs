@@ -47,6 +47,10 @@ namespace ParticleSim
                 this.Hide();
             }
         }
-        
+
+        private void StartMenu_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

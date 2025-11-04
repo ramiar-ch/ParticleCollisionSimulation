@@ -117,33 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="richTextBoxPhysics.Text" xml:space="preserve">
-    <value>This page is designed to give an overview of some physics concepts which users may find helpful. 
-
-Newtonian / Classical mechanics - this applies to particles moving at everyday speeds, and assumes that time and space are absolute. This is 'normal' mechanics, where laws such as F=ma, and p=mv apply.
-
-Relativistic mechanics - this applies when particles move near light speed, and classical mechanics begins to break down. In this model, time and space become relative and can vary depending on the observer. Momentum and energy are modified with the 'Lorentz factor'. This leads to particles behaving slightly differently, this can be viewed in the relativistic mode.
-</value>
-  </data>
-  <data name="richTextBoxNav.Text" xml:space="preserve">
-    <value>Start Menu Buttons:
-
-1D Model – Opens a simplified one-dimensional model, suitable for quickly testing particle collisions along a straight line.
-2D Model – Opens the two-dimensional simulation, where particles can move and interact across a plane, under Newtonian mechanics.
-Relativistic Model – Opens the relativistic mode, which takes special relativity into account for high-speed collisions.
-Gaseous Model – Opens a mode simulating many particles moving randomly.
-
-General Controls:
-
-Play / Pause – Starts or stops the simulation.
-Reset – Returns the system to its initial state, as set by the Particle Initialiser.
-Help – Opens this guide at any time.
-Close Window – Exits the current mode and returns to the Start Menu.
-
-Navigation Tips
-
-You can only have one simulation window open at a time. Opening a new mode will automatically hide the Start Menu.
-To switch modes, navigate back to the Start Menu and select from there.
-The Help button is available on all pages for quick access to instructions and explanations.</value>
-  </data>
 </root>

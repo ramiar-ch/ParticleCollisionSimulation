@@ -18,14 +18,18 @@ namespace ParticleSim
             panelDisplayArea.Visible = true;
         }        
 
-        public void RenderParticles(Graphics g, List<Particle> particles, Panel panelDisplayArea)
+        public void RenderParticles(Graphics g, List<Particle> particles, Panel panelDisplayArea, int mode)
         {
             foreach (Particle p in particles)                   // loops through each particle
             {
-                float x = p.position.X;                         
+                float x = p.position.X;
+                float y = p.position.Y;
                 float radius = p.radius;
-                float centerY = panelDisplayArea.Height / 2f;   // the y value for each particle should be the center of the display panel in 1D
-                RectangleF particleBounds = new RectangleF(x - radius, centerY - radius, 2 * radius, 2 * radius);   // bounds for the particle circle
+                if (mode == 1)
+                {
+                    y = panelDisplayArea.Height / 2f;   // the y value for each particle should be the center of the display panel in 1D
+                }
+                RectangleF particleBounds = new RectangleF(x - radius, y - radius, 2 * radius, 2 * radius);   // bounds for the particle circle
                 g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias; // makes circles smoother
 
                 using (Brush brush = new SolidBrush(p.color))

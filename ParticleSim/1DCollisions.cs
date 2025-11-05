@@ -16,7 +16,7 @@ using System.Windows.Forms;
 
 namespace ParticleSim
 {
-    public partial class OneDCollisions : Form
+    public partial class _1DCollisions : Form
     {
         private DisplayFrame displayFrame;
         private ParticleInitialiser init;
@@ -27,8 +27,10 @@ namespace ParticleSim
         private Timer timer;
         private int fps = 30;
         private bool running = false;
-        
-        public OneDCollisions()
+        private float restitution; 
+        private int mode = 1; // 1D mode
+
+        public _1DCollisions()
         {
             InitializeComponent();
 
@@ -43,6 +45,12 @@ namespace ParticleSim
 
             simManager.SetBounds(panelDisplayArea.Width);                                                                               
             panelDisplayArea.Invalidate();
+
+            trackBarElasticity.Minimum = 0;                         // set trackbar range
+            trackBarElasticity.Maximum = 1000;                      // use 0-1000 scale for more precise control
+            trackBarElasticity.Value = trackBarElasticity.Maximum;  // default to max elasticity (1.0)
+            trackBarElasticity.TickStyle = TickStyle.None;          // hide ticks
+            restitution = trackBarElasticity.Value / (float)trackBarElasticity.Maximum;   // initial restitution value            
         }                    
 
         private void panelDisplayArea_Paint(object sender, PaintEventArgs e)
@@ -68,7 +76,7 @@ namespace ParticleSim
             }
 
             List<Particle> particles = init.GetParticles();
-            displayFrame.RenderParticles(g, particles, panelDisplayArea);
+            displayFrame.RenderParticles(g, particles, panelDisplayArea, mode);
         }
 
         private void textBoxMass_KeyPress(object sender, KeyPressEventArgs e)
@@ -117,9 +125,6 @@ namespace ParticleSim
                 ClearInputs();
                 return;
             }
-
-            // string
-            // -20
 
             float x = (float)rng.NextDouble() * panelDisplayArea.Width;                 // random x position within panel bounds
             float y = (float)rng.NextDouble() * panelDisplayArea.Height;                // random y position within panel bounds
@@ -197,6 +202,17 @@ namespace ParticleSim
                 timer.Dispose();                                // dispose of timer
                 timer = null;                                   // clear timer variable        
             }                           
-        }        
+        }
+
+        private void trackBarElasticity_Scroll(object sender, EventArgs e)
+        {
+            restitution = trackBarElasticity.Value / (float)trackBarElasticity.Maximum;   // get restitution value between 0 and 1          
+            simManager.SetElasticity(restitution);                                        // update simulation manager with new restitution value
+        }
+
+        private void checkBoxGrid_CheckedChanged(object sender, EventArgs e)
+        {
+            panelDisplayArea.Invalidate();
+        }
     }
 }

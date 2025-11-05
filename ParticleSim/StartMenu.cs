@@ -21,8 +21,8 @@ namespace ParticleSim
             // navigationMap is a dictionary required for the Navigate() method
             navigationMap = new Dictionary<Button, Func<Form>>
             {
-                { btn1D, () => new OneDCollisions() },
-                { btn2D, () => new TwoDCollisions() },              
+                { btn1D, () => new _1DCollisions() },
+                { btn2D, () => new _2DCollisions() },              
                 { btnRelativistic, () => new RelativisticCollisions() },   
                 { btnGaseous, () => new GaseousCollisions() },        
                 { btnHelpGuide, () => new HelpGuide() },       

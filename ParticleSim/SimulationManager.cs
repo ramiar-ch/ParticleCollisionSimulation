@@ -12,6 +12,7 @@ namespace ParticleSim
     public class SimulationManager
     {
         private float boundsWidth = 0f;
+        private float restitution = 1f;
         
         public SimulationManager()
         {
@@ -21,6 +22,12 @@ namespace ParticleSim
         public void SetBounds(int width)
         {
             boundsWidth = width;
+        }
+
+        public void SetElasticity(float elasticity)
+        {
+            restitution = elasticity;
+            Console.WriteLine("Restitution set to: " + restitution);
         }
         
         public List<Particle> UpdateParticles(List<Particle> particles, float timeChange)
@@ -55,7 +62,8 @@ namespace ParticleSim
                     float radiusSum = particleA.radius + particleB.radius;  // sum of radii
                     if (distanceSquared <= radiusSum * radiusSum)           // collision detected 
                     {
-                        ResolveCollisions(particleA, particleB, 1f);        // resolve collision with restitution of 1 (elastic)
+                        ResolveCollisions(particleA, particleB, restitution);        // resolve collision with restitution of 1 (elastic)
+                        Console.WriteLine("Collision detected between Particle " + particleA.id + " and Particle " + particleB.id);
                     }
                 }
             }

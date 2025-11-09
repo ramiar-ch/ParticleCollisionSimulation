@@ -62,7 +62,7 @@ namespace ParticleSim
             }
         }
 
-        public void DrawArrows(Graphics g, List<Particle> particles)
+        public void DrawArrows(Graphics g, List<Particle> particles, Panel panelDisplayArea, int mode)
         {
             float arrowLengthScale = 0.4f;                      // pixels per m/s
             float headLengthScale = 1f;                         // arrowhead length for radius 1px
@@ -81,6 +81,12 @@ namespace ParticleSim
 
                 Vector2 normal = velocity / speed;              // normalize velocity to get direction
                 Vector2 start = p.position;                     // start at particle position
+
+                if (mode == 1 && panelDisplayArea != null)
+                {
+                    start.Y = panelDisplayArea.Height / 2f;
+                }
+
                 Vector2 end = start + (normal * speed * arrowLengthScale);      // end point based on speed and direction
 
                 using (Pen outlineArrow = new Pen(Color.Black, outlineThickness * 2f + arrowThickness))

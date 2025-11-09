@@ -34,6 +34,15 @@
             this.labelColor = new System.Windows.Forms.Label();
             this.buttonCreateParticle = new System.Windows.Forms.Button();
             this.panelModifer = new System.Windows.Forms.Panel();
+            this.buttonModifyParticle = new System.Windows.Forms.Button();
+            this.textBoxAngleModifier = new System.Windows.Forms.TextBox();
+            this.labelAngle = new System.Windows.Forms.Label();
+            this.comboBoxColorModifier = new System.Windows.Forms.ComboBox();
+            this.textBoxSpeedModifier = new System.Windows.Forms.TextBox();
+            this.textBoxMassModifier = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.labelSpeedModifier = new System.Windows.Forms.Label();
+            this.labelMassModifier = new System.Windows.Forms.Label();
             this.buttonRunReset = new System.Windows.Forms.Button();
             this.buttonClear = new System.Windows.Forms.Button();
             this.checkBoxArrows = new System.Windows.Forms.CheckBox();
@@ -44,15 +53,6 @@
             this.textBoxMass = new System.Windows.Forms.TextBox();
             this.labelSpeed = new System.Windows.Forms.Label();
             this.labelMass = new System.Windows.Forms.Label();
-            this.labelMassModifier = new System.Windows.Forms.Label();
-            this.labelSpeedModifier = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBoxMassModifier = new System.Windows.Forms.TextBox();
-            this.textBoxSpeedModifier = new System.Windows.Forms.TextBox();
-            this.comboBoxColorModifier = new System.Windows.Forms.ComboBox();
-            this.labelAngle = new System.Windows.Forms.Label();
-            this.textBoxAngleModifier = new System.Windows.Forms.TextBox();
-            this.buttonModifyParticle = new System.Windows.Forms.Button();
             this.panelParticleInitialiser.SuspendLayout();
             this.panelModifer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarElasticity)).BeginInit();
@@ -128,6 +128,96 @@
             this.panelModifer.Name = "panelModifer";
             this.panelModifer.Size = new System.Drawing.Size(375, 214);
             this.panelModifer.TabIndex = 2;
+            // 
+            // buttonModifyParticle
+            // 
+            this.buttonModifyParticle.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonModifyParticle.Location = new System.Drawing.Point(132, 156);
+            this.buttonModifyParticle.Name = "buttonModifyParticle";
+            this.buttonModifyParticle.Size = new System.Drawing.Size(92, 31);
+            this.buttonModifyParticle.TabIndex = 19;
+            this.buttonModifyParticle.Text = "MODIFY";
+            this.buttonModifyParticle.UseVisualStyleBackColor = true;
+            this.buttonModifyParticle.Click += new System.EventHandler(this.buttonModifyParticle_Click);
+            // 
+            // textBoxAngleModifier
+            // 
+            this.textBoxAngleModifier.Location = new System.Drawing.Point(256, 76);
+            this.textBoxAngleModifier.Name = "textBoxAngleModifier";
+            this.textBoxAngleModifier.Size = new System.Drawing.Size(74, 22);
+            this.textBoxAngleModifier.TabIndex = 21;
+            // 
+            // labelAngle
+            // 
+            this.labelAngle.AutoSize = true;
+            this.labelAngle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.labelAngle.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelAngle.ForeColor = System.Drawing.Color.White;
+            this.labelAngle.Location = new System.Drawing.Point(196, 75);
+            this.labelAngle.Name = "labelAngle";
+            this.labelAngle.Size = new System.Drawing.Size(52, 21);
+            this.labelAngle.TabIndex = 20;
+            this.labelAngle.Text = "Angle";
+            // 
+            // comboBoxColorModifier
+            // 
+            this.comboBoxColorModifier.FormattingEnabled = true;
+            this.comboBoxColorModifier.Location = new System.Drawing.Point(94, 74);
+            this.comboBoxColorModifier.Name = "comboBoxColorModifier";
+            this.comboBoxColorModifier.Size = new System.Drawing.Size(85, 24);
+            this.comboBoxColorModifier.TabIndex = 19;
+            // 
+            // textBoxSpeedModifier
+            // 
+            this.textBoxSpeedModifier.Location = new System.Drawing.Point(256, 31);
+            this.textBoxSpeedModifier.Name = "textBoxSpeedModifier";
+            this.textBoxSpeedModifier.Size = new System.Drawing.Size(74, 22);
+            this.textBoxSpeedModifier.TabIndex = 19;
+            this.textBoxSpeedModifier.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxSpeed_KeyPress);
+            // 
+            // textBoxMassModifier
+            // 
+            this.textBoxMassModifier.Location = new System.Drawing.Point(97, 31);
+            this.textBoxMassModifier.Name = "textBoxMassModifier";
+            this.textBoxMassModifier.Size = new System.Drawing.Size(74, 22);
+            this.textBoxMassModifier.TabIndex = 17;
+            this.textBoxMassModifier.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxMass_KeyPress);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.label1.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(31, 73);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(57, 21);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Colour";
+            // 
+            // labelSpeedModifier
+            // 
+            this.labelSpeedModifier.AutoSize = true;
+            this.labelSpeedModifier.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.labelSpeedModifier.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSpeedModifier.ForeColor = System.Drawing.Color.White;
+            this.labelSpeedModifier.Location = new System.Drawing.Point(193, 30);
+            this.labelSpeedModifier.Name = "labelSpeedModifier";
+            this.labelSpeedModifier.Size = new System.Drawing.Size(55, 21);
+            this.labelSpeedModifier.TabIndex = 17;
+            this.labelSpeedModifier.Text = "Speed";
+            // 
+            // labelMassModifier
+            // 
+            this.labelMassModifier.AutoSize = true;
+            this.labelMassModifier.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.labelMassModifier.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMassModifier.ForeColor = System.Drawing.Color.White;
+            this.labelMassModifier.Location = new System.Drawing.Point(40, 31);
+            this.labelMassModifier.Name = "labelMassModifier";
+            this.labelMassModifier.Size = new System.Drawing.Size(48, 21);
+            this.labelMassModifier.TabIndex = 17;
+            this.labelMassModifier.Text = "Mass";
             // 
             // buttonRunReset
             // 
@@ -237,96 +327,6 @@
             this.labelMass.Size = new System.Drawing.Size(48, 21);
             this.labelMass.TabIndex = 8;
             this.labelMass.Text = "Mass";
-            // 
-            // labelMassModifier
-            // 
-            this.labelMassModifier.AutoSize = true;
-            this.labelMassModifier.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.labelMassModifier.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelMassModifier.ForeColor = System.Drawing.Color.White;
-            this.labelMassModifier.Location = new System.Drawing.Point(40, 31);
-            this.labelMassModifier.Name = "labelMassModifier";
-            this.labelMassModifier.Size = new System.Drawing.Size(48, 21);
-            this.labelMassModifier.TabIndex = 17;
-            this.labelMassModifier.Text = "Mass";
-            // 
-            // labelSpeedModifier
-            // 
-            this.labelSpeedModifier.AutoSize = true;
-            this.labelSpeedModifier.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.labelSpeedModifier.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSpeedModifier.ForeColor = System.Drawing.Color.White;
-            this.labelSpeedModifier.Location = new System.Drawing.Point(193, 30);
-            this.labelSpeedModifier.Name = "labelSpeedModifier";
-            this.labelSpeedModifier.Size = new System.Drawing.Size(55, 21);
-            this.labelSpeedModifier.TabIndex = 17;
-            this.labelSpeedModifier.Text = "Speed";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.label1.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(31, 73);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(57, 21);
-            this.label1.TabIndex = 18;
-            this.label1.Text = "Colour";
-            // 
-            // textBoxMassModifier
-            // 
-            this.textBoxMassModifier.Location = new System.Drawing.Point(97, 31);
-            this.textBoxMassModifier.Name = "textBoxMassModifier";
-            this.textBoxMassModifier.Size = new System.Drawing.Size(74, 22);
-            this.textBoxMassModifier.TabIndex = 17;
-            this.textBoxMassModifier.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxMass_KeyPress);
-            // 
-            // textBoxSpeedModifier
-            // 
-            this.textBoxSpeedModifier.Location = new System.Drawing.Point(256, 31);
-            this.textBoxSpeedModifier.Name = "textBoxSpeedModifier";
-            this.textBoxSpeedModifier.Size = new System.Drawing.Size(74, 22);
-            this.textBoxSpeedModifier.TabIndex = 19;
-            this.textBoxSpeedModifier.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxSpeed_KeyPress);
-            // 
-            // comboBoxColorModifier
-            // 
-            this.comboBoxColorModifier.FormattingEnabled = true;
-            this.comboBoxColorModifier.Location = new System.Drawing.Point(94, 74);
-            this.comboBoxColorModifier.Name = "comboBoxColorModifier";
-            this.comboBoxColorModifier.Size = new System.Drawing.Size(85, 24);
-            this.comboBoxColorModifier.TabIndex = 19;
-            // 
-            // labelAngle
-            // 
-            this.labelAngle.AutoSize = true;
-            this.labelAngle.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.labelAngle.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelAngle.ForeColor = System.Drawing.Color.White;
-            this.labelAngle.Location = new System.Drawing.Point(196, 75);
-            this.labelAngle.Name = "labelAngle";
-            this.labelAngle.Size = new System.Drawing.Size(52, 21);
-            this.labelAngle.TabIndex = 20;
-            this.labelAngle.Text = "Angle";
-            // 
-            // textBoxAngleModifier
-            // 
-            this.textBoxAngleModifier.Location = new System.Drawing.Point(256, 76);
-            this.textBoxAngleModifier.Name = "textBoxAngleModifier";
-            this.textBoxAngleModifier.Size = new System.Drawing.Size(74, 22);
-            this.textBoxAngleModifier.TabIndex = 21;
-            // 
-            // buttonModifyParticle
-            // 
-            this.buttonModifyParticle.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonModifyParticle.Location = new System.Drawing.Point(132, 156);
-            this.buttonModifyParticle.Name = "buttonModifyParticle";
-            this.buttonModifyParticle.Size = new System.Drawing.Size(92, 31);
-            this.buttonModifyParticle.TabIndex = 19;
-            this.buttonModifyParticle.Text = "MODIFY";
-            this.buttonModifyParticle.UseVisualStyleBackColor = true;
-            this.buttonModifyParticle.Click += new System.EventHandler(this.buttonModifyParticle_Click);
             // 
             // _2DCollisions
             // 

@@ -91,7 +91,7 @@ namespace ParticleSim
 
             if (checkBoxArrows.Checked == true)
             {
-                displayFrame.DrawArrows(g, particles);
+                displayFrame.DrawArrows(g, particles, panelDisplayArea, mode);
             }
         }        
 

@@ -30,7 +30,9 @@
         {
             this.panelDisplayArea = new System.Windows.Forms.Panel();
             this.panelParticleInitialiser = new System.Windows.Forms.Panel();
+            this.comboBoxColor = new System.Windows.Forms.ComboBox();
             this.checkBoxArrows = new System.Windows.Forms.CheckBox();
+            this.labelColor = new System.Windows.Forms.Label();
             this.labelRestitution = new System.Windows.Forms.Label();
             this.trackBarElasticity = new System.Windows.Forms.TrackBar();
             this.checkBoxGrid = new System.Windows.Forms.CheckBox();
@@ -42,10 +44,16 @@
             this.buttonRunReset = new System.Windows.Forms.Button();
             this.buttonClear = new System.Windows.Forms.Button();
             this.panelParticleCustomiser = new System.Windows.Forms.Panel();
-            this.comboBoxColor = new System.Windows.Forms.ComboBox();
-            this.labelColor = new System.Windows.Forms.Label();
+            this.buttonModifyParticle = new System.Windows.Forms.Button();
+            this.comboBoxColorModifier = new System.Windows.Forms.ComboBox();
+            this.labelMassModifier = new System.Windows.Forms.Label();
+            this.textBoxSpeedModifier = new System.Windows.Forms.TextBox();
+            this.labelSpeedModifier = new System.Windows.Forms.Label();
+            this.textBoxMassModifier = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelParticleInitialiser.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarElasticity)).BeginInit();
+            this.panelParticleCustomiser.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelDisplayArea
@@ -56,6 +64,9 @@
             this.panelDisplayArea.Size = new System.Drawing.Size(776, 100);
             this.panelDisplayArea.TabIndex = 0;
             this.panelDisplayArea.Paint += new System.Windows.Forms.PaintEventHandler(this.panelDisplayArea_Paint);
+            this.panelDisplayArea.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelDisplayArea_MouseDown);
+            this.panelDisplayArea.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelDisplayArea_MouseMove);
+            this.panelDisplayArea.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panelDisplayArea_MouseUp);
             // 
             // panelParticleInitialiser
             // 
@@ -76,6 +87,14 @@
             this.panelParticleInitialiser.Size = new System.Drawing.Size(327, 295);
             this.panelParticleInitialiser.TabIndex = 1;
             // 
+            // comboBoxColor
+            // 
+            this.comboBoxColor.FormattingEnabled = true;
+            this.comboBoxColor.Location = new System.Drawing.Point(104, 102);
+            this.comboBoxColor.Name = "comboBoxColor";
+            this.comboBoxColor.Size = new System.Drawing.Size(162, 24);
+            this.comboBoxColor.TabIndex = 20;
+            // 
             // checkBoxArrows
             // 
             this.checkBoxArrows.AutoSize = true;
@@ -87,6 +106,18 @@
             this.checkBoxArrows.TabIndex = 7;
             this.checkBoxArrows.Text = "Arrows";
             this.checkBoxArrows.UseVisualStyleBackColor = true;
+            // 
+            // labelColor
+            // 
+            this.labelColor.AutoSize = true;
+            this.labelColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.labelColor.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelColor.ForeColor = System.Drawing.Color.White;
+            this.labelColor.Location = new System.Drawing.Point(38, 100);
+            this.labelColor.Name = "labelColor";
+            this.labelColor.Size = new System.Drawing.Size(57, 21);
+            this.labelColor.TabIndex = 19;
+            this.labelColor.Text = "Colour";
             // 
             // labelRestitution
             // 
@@ -194,30 +225,86 @@
             // panelParticleCustomiser
             // 
             this.panelParticleCustomiser.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.panelParticleCustomiser.Controls.Add(this.buttonModifyParticle);
+            this.panelParticleCustomiser.Controls.Add(this.comboBoxColorModifier);
+            this.panelParticleCustomiser.Controls.Add(this.labelMassModifier);
+            this.panelParticleCustomiser.Controls.Add(this.textBoxSpeedModifier);
+            this.panelParticleCustomiser.Controls.Add(this.labelSpeedModifier);
+            this.panelParticleCustomiser.Controls.Add(this.textBoxMassModifier);
+            this.panelParticleCustomiser.Controls.Add(this.label1);
             this.panelParticleCustomiser.Location = new System.Drawing.Point(28, 209);
             this.panelParticleCustomiser.Name = "panelParticleCustomiser";
             this.panelParticleCustomiser.Size = new System.Drawing.Size(412, 229);
             this.panelParticleCustomiser.TabIndex = 5;
             // 
-            // comboBoxColor
+            // buttonModifyParticle
             // 
-            this.comboBoxColor.FormattingEnabled = true;
-            this.comboBoxColor.Location = new System.Drawing.Point(104, 102);
-            this.comboBoxColor.Name = "comboBoxColor";
-            this.comboBoxColor.Size = new System.Drawing.Size(162, 24);
-            this.comboBoxColor.TabIndex = 20;
+            this.buttonModifyParticle.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonModifyParticle.Location = new System.Drawing.Point(151, 159);
+            this.buttonModifyParticle.Name = "buttonModifyParticle";
+            this.buttonModifyParticle.Size = new System.Drawing.Size(92, 31);
+            this.buttonModifyParticle.TabIndex = 24;
+            this.buttonModifyParticle.Text = "MODIFY";
+            this.buttonModifyParticle.UseVisualStyleBackColor = true;
+            this.buttonModifyParticle.Click += new System.EventHandler(this.buttonModifyParticle_Click);
             // 
-            // labelColor
+            // comboBoxColorModifier
             // 
-            this.labelColor.AutoSize = true;
-            this.labelColor.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.labelColor.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelColor.ForeColor = System.Drawing.Color.White;
-            this.labelColor.Location = new System.Drawing.Point(38, 100);
-            this.labelColor.Name = "labelColor";
-            this.labelColor.Size = new System.Drawing.Size(57, 21);
-            this.labelColor.TabIndex = 19;
-            this.labelColor.Text = "Colour";
+            this.comboBoxColorModifier.FormattingEnabled = true;
+            this.comboBoxColorModifier.Location = new System.Drawing.Point(113, 77);
+            this.comboBoxColorModifier.Name = "comboBoxColorModifier";
+            this.comboBoxColorModifier.Size = new System.Drawing.Size(85, 24);
+            this.comboBoxColorModifier.TabIndex = 25;
+            // 
+            // labelMassModifier
+            // 
+            this.labelMassModifier.AutoSize = true;
+            this.labelMassModifier.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.labelMassModifier.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMassModifier.ForeColor = System.Drawing.Color.White;
+            this.labelMassModifier.Location = new System.Drawing.Point(59, 34);
+            this.labelMassModifier.Name = "labelMassModifier";
+            this.labelMassModifier.Size = new System.Drawing.Size(48, 21);
+            this.labelMassModifier.TabIndex = 22;
+            this.labelMassModifier.Text = "Mass";
+            // 
+            // textBoxSpeedModifier
+            // 
+            this.textBoxSpeedModifier.Location = new System.Drawing.Point(275, 34);
+            this.textBoxSpeedModifier.Name = "textBoxSpeedModifier";
+            this.textBoxSpeedModifier.Size = new System.Drawing.Size(74, 22);
+            this.textBoxSpeedModifier.TabIndex = 26;
+            // 
+            // labelSpeedModifier
+            // 
+            this.labelSpeedModifier.AutoSize = true;
+            this.labelSpeedModifier.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.labelSpeedModifier.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSpeedModifier.ForeColor = System.Drawing.Color.White;
+            this.labelSpeedModifier.Location = new System.Drawing.Point(212, 33);
+            this.labelSpeedModifier.Name = "labelSpeedModifier";
+            this.labelSpeedModifier.Size = new System.Drawing.Size(55, 21);
+            this.labelSpeedModifier.TabIndex = 21;
+            this.labelSpeedModifier.Text = "Speed";
+            // 
+            // textBoxMassModifier
+            // 
+            this.textBoxMassModifier.Location = new System.Drawing.Point(116, 34);
+            this.textBoxMassModifier.Name = "textBoxMassModifier";
+            this.textBoxMassModifier.Size = new System.Drawing.Size(74, 22);
+            this.textBoxMassModifier.TabIndex = 20;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.label1.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(50, 76);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(57, 21);
+            this.label1.TabIndex = 23;
+            this.label1.Text = "Colour";
             // 
             // _1DCollisions
             // 
@@ -235,6 +322,8 @@
             this.panelParticleInitialiser.ResumeLayout(false);
             this.panelParticleInitialiser.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarElasticity)).EndInit();
+            this.panelParticleCustomiser.ResumeLayout(false);
+            this.panelParticleCustomiser.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -257,5 +346,12 @@
         private System.Windows.Forms.TrackBar trackBarElasticity;
         private System.Windows.Forms.ComboBox comboBoxColor;
         private System.Windows.Forms.Label labelColor;
+        private System.Windows.Forms.Button buttonModifyParticle;
+        private System.Windows.Forms.ComboBox comboBoxColorModifier;
+        private System.Windows.Forms.Label labelMassModifier;
+        private System.Windows.Forms.TextBox textBoxSpeedModifier;
+        private System.Windows.Forms.Label labelSpeedModifier;
+        private System.Windows.Forms.TextBox textBoxMassModifier;
+        private System.Windows.Forms.Label label1;
     }
 }

@@ -39,7 +39,7 @@ namespace ParticleSim
         public List<Particle> ScaleRadii(List<Particle> particles)
         {
             float maxRadius = 25f;              // max and min bounds for the radius
-            float minRadius = 7f;
+            float minRadius = 15f;
 
             if (particles.Count == 0)
             {

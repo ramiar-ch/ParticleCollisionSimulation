@@ -43,40 +43,49 @@ namespace ParticleSim
             init = new ParticleInitialiser();
             simManager = new SimulationManager();
 
-            simManager.SetBounds(panelDisplayArea.Width);                                                                               
+            simManager.SetBounds(panelDisplayArea.Width, panelDisplayArea.Height);                                                                               
             panelDisplayArea.Invalidate();
 
-            trackBarElasticity.Minimum = 0;                         // set trackbar range
-            trackBarElasticity.Maximum = 1000;                      // use 0-1000 scale for more precise control
-            trackBarElasticity.Value = trackBarElasticity.Maximum;  // default to max elasticity (1.0)
-            trackBarElasticity.TickStyle = TickStyle.None;          // hide ticks
-            restitution = trackBarElasticity.Value / (float)trackBarElasticity.Maximum;   // initial restitution value            
-        }                    
+            trackBarElasticity.Minimum = 0;                                                 // set trackbar range
+            trackBarElasticity.Maximum = 1000;                                              // use 0-1000 scale for more precise control
+            trackBarElasticity.Value = trackBarElasticity.Maximum;                          // default to max elasticity (1.0)
+            trackBarElasticity.TickStyle = TickStyle.None;                                  // hide ticks
+            restitution = trackBarElasticity.Value / (float)trackBarElasticity.Maximum;     // initial restitution value
+                                                                                          
+            Dictionary<string, Color> colors = new Dictionary<string, Color>
+            {
+                { "Random", Color.FromArgb(rng.Next(256), rng.Next(256), rng.Next(256)) },
+                { "Red", Color.Red },
+                { "Green", Color.Green },
+                { "Blue", Color.Blue },
+                { "Yellow", Color.Yellow },
+                { "Magenta", Color.Magenta },
+                { "Cyan", Color.Cyan },
+            };
+
+            comboBoxColor.DataSource = new BindingSource(colors, null);
+            comboBoxColor.DisplayMember = "Key";
+            comboBoxColor.ValueMember = "Value";
+            comboBoxColor.SelectedIndex = 0;                                                // default to "Random"
+        }
 
         private void panelDisplayArea_Paint(object sender, PaintEventArgs e)
         {
-            Graphics g = e.Graphics;            
+            Graphics g = e.Graphics;
 
             if (checkBoxGrid.Checked == true)           // if option enabled
             {
-                Pen gridPen = new Pen(Color.LightSalmon);
+                displayFrame.DrawGrid(g, panelDisplayArea);
 
-                int gridlines = 100;                    // how many gridlines drawn horizontally and vertically
-                int spacing = 10;                       // space between gridlines in pixels
-
-                for (int i = 0; i <= gridlines; i++)    // draw horizontal gridlines
-                {
-                    g.DrawLine(gridPen, i * spacing, 0, i * spacing, panelDisplayArea.Height);
-                }
-
-                for (int j = 0; j <= gridlines; j++)    // draw vertical gridlines
-                {
-                    g.DrawLine(gridPen, 0, j * spacing, panelDisplayArea.Width, j * spacing);
-                }
             }
 
             List<Particle> particles = init.GetParticles();
             displayFrame.RenderParticles(g, particles, panelDisplayArea, mode);
+
+            if (checkBoxArrows.Checked == true)
+            {
+                displayFrame.DrawArrows(g, particles);
+            }
         }
 
         private void textBoxMass_KeyPress(object sender, KeyPressEventArgs e)
@@ -131,6 +140,11 @@ namespace ParticleSim
 
             Color color = Color.FromArgb(rng.Next(256), rng.Next(256), rng.Next(256));  // random colour generation
 
+            if (comboBoxColor.SelectedValue is Color selColor)
+            {
+                color = selColor;
+            }
+            
             Dictionary<string, object> particleConfig = new Dictionary<string, object>  // this dictionary is used to generate a 
             {                                                                           // full particle profile                 
                 { "mass", mass },                                                       // before addding it to the list

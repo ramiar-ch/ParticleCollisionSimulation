@@ -11,25 +11,25 @@ namespace ParticleSim
 {
     public class SimulationManager
     {
-        private float boundsWidth = 0f;
-        private float restitution = 1f;
-        
+        private int[] bounds = new int[2];          // first value is width, second is height
+        private float restitution = 1f;             // default to elastic
+
         public SimulationManager()
         {
-           
+
         }
 
-        public void SetBounds(int width)
+        public void SetBounds(int width, int height)
         {
-            boundsWidth = width;
+            bounds[0] = width;
+            bounds[1] = height;
         }
 
         public void SetElasticity(float elasticity)
         {
             restitution = elasticity;
-            Console.WriteLine("Restitution set to: " + restitution);
         }
-        
+
         public List<Particle> UpdateParticles(List<Particle> particles, float timeChange)
         {
             List<Particle> updatedParticles = new List<Particle>(particles.Count);
@@ -39,10 +39,10 @@ namespace ParticleSim
                 EnforceBoundary(p);
                 updatedParticles.Add(p);
             }
-            
+
             return updatedParticles;
-        }               
-         
+        }
+
         public void DetectCollisions(List<Particle> particles)
         {
             if (particles == null || particles.Count < 2)   // null check
@@ -67,45 +67,27 @@ namespace ParticleSim
                     }
                 }
             }
-        }  
+        }
 
         public void ResolveCollisions(Particle particleA, Particle particleB, float restitution)
-        {               
+        {
             if (particleA == null || particleB == null || particleA.mass <= 0f || particleB.mass <= 0f)
             {
                 return;                                 // null check and mass check
             }
-            // get the penetration and move this to prototype 4 when i fix this issue properly
-            /*
-            float penetration = (particleA.radius + particleB.radius) - Math.Abs(particleB.position.X - particleA.position.X); // penetration depth
-            if (penetration > 0f)   // if overlapping
-            {
-                float correctionPercent = 0.5f;   // push each particle half the penetration distance                    
-
-                if (particleA.velocity.X > 0 && particleB.velocity.X < 0) // A moving right, B moving left
-                {
-                    particleA.position.X -= penetration * correctionPercent; // move A left
-                    particleB.position.X += penetration * correctionPercent; // move B right
-                }
-                else if (particleA.velocity.X < 0 && particleB.velocity.X > 0) // A moving left, B moving right
-                {
-                    particleA.position.X += penetration * correctionPercent; // move A right
-                    particleB.position.X -= penetration * correctionPercent; // move B left
-                }
-            }*/
 
             float speedA = particleA.velocity.X;        // get speeds
-            float speedB = particleB.velocity.X;                
-                
+            float speedB = particleB.velocity.X;
+
             if (particleA.position.X < particleB.position.X && speedA <= speedB)
             {
                 return;                                 // if separating do nothing
-            } 
-                    
+            }
+
             if (particleA.position.X > particleB.position.X && speedA >= speedB)
             {
                 return;                                 // if separating do nothing
-            }                    
+            }
 
             float massA = particleA.mass;               // variables for masses
             float massB = particleB.mass;
@@ -118,11 +100,14 @@ namespace ParticleSim
             velocityB = speedB + (velocityB - speedB) * Math.Max(0f, Math.Min(1f, restitution));
 
             particleA.velocity = new Vector2(velocityA, particleA.velocity.Y);                      // update velocities
-            particleB.velocity = new Vector2(velocityB, particleB.velocity.Y);            
-        }                     
-                
+            particleB.velocity = new Vector2(velocityB, particleB.velocity.Y);
+        }
+
         public void EnforceBoundary(Particle particle)
         {
+            int width = bounds[0];
+            int height = bounds[1];
+
             if (particle == null)
             {
                 return;
@@ -131,17 +116,31 @@ namespace ParticleSim
             float radius = particle.radius;
 
             // left boundary 
-            if (particle.position.X - radius < 0f)          
+            if (particle.position.X - radius < 0f)
             {
                 particle.position.X = radius;                   // reset position to boundary
                 particle.velocity.X = -particle.velocity.X;     // reverse velocity    
             }
 
             // right boundary
-            if (particle.position.X + radius > boundsWidth)     
+            if (particle.position.X + radius > width)
             {
-                particle.position.X = boundsWidth - radius;     // reset position to boundary
+                particle.position.X = width - radius;           // reset position to boundary
                 particle.velocity.X = -particle.velocity.X;     // reverse velocity
+            }
+
+            // top boundary
+            if (particle.position.Y - radius < 0f)              
+            {
+                particle.position.Y = radius;                   // reset position to boundary
+                particle.velocity.Y = -particle.velocity.Y;     // reverse velocity    
+            }
+
+            // bottom boundary
+            if (particle.position.Y + radius > height)          
+            {
+                particle.position.Y = height - radius;          // reset position to boundary
+                particle.velocity.Y = -particle.velocity.Y;     // reverse velocity
             }
         }
     }

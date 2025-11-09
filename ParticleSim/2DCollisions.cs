@@ -25,6 +25,13 @@ namespace ParticleSim
         private bool running = false;
         private float restitution;
         private int mode = 2; // 2D mode
+
+        private bool draggingParticle = false;
+        private bool draggingArrow = false;
+
+        private Particle selectedParticle = null;
+        private Particle selectedArrow = null;
+        private Particle particleToModify = null;
         public _2DCollisions()
         {
             InitializeComponent();
@@ -38,14 +45,35 @@ namespace ParticleSim
             init = new ParticleInitialiser();
             simManager = new SimulationManager();
 
-            simManager.SetBounds(panelDisplayArea.Width);
+            simManager.SetBounds(panelDisplayArea.Width, panelDisplayArea.Height);
             panelDisplayArea.Invalidate();
 
-            trackBarElasticity.Minimum = 0;                         // set trackbar range
-            trackBarElasticity.Maximum = 1000;                      // use 0-1000 scale for more precise control
-            trackBarElasticity.Value = trackBarElasticity.Maximum;  // default to max elasticity (1.0)
-            trackBarElasticity.TickStyle = TickStyle.None;          // hide ticks
-            restitution = trackBarElasticity.Value / (float)trackBarElasticity.Maximum;   // initial restitution value 
+            trackBarElasticity.Minimum = 0;                                                 // set trackbar range
+            trackBarElasticity.Maximum = 1000;                                              // use 0-1000 scale for more precise control
+            trackBarElasticity.Value = trackBarElasticity.Maximum;                          // default to max elasticity (1.0)
+            trackBarElasticity.TickStyle = TickStyle.None;                                  // hide ticks
+            restitution = trackBarElasticity.Value / (float)trackBarElasticity.Maximum;     // initial restitution value 
+
+            Dictionary<string, Color> colors = new Dictionary<string, Color>
+            {
+                { "Random", Color.Empty },
+                { "Red", Color.Red },
+                { "Green", Color.Green },
+                { "Blue", Color.Blue },
+                { "Yellow", Color.Yellow },
+                { "Magenta", Color.Magenta },
+                { "Cyan", Color.Cyan },
+            };
+
+            comboBoxColor.DataSource = new BindingSource(colors, null);
+            comboBoxColor.DisplayMember = "Key";
+            comboBoxColor.ValueMember = "Value";
+            comboBoxColor.SelectedIndex = 0;                                                // default to "Random"
+
+            comboBoxColorModifier.DataSource = new BindingSource(colors, null);
+            comboBoxColorModifier.DisplayMember = "Key";
+            comboBoxColorModifier.ValueMember = "Value";
+            comboBoxColorModifier.SelectedIndex = -1;                                       // default to no selection
         }
 
         private void panelDisplayArea_Paint(object sender, PaintEventArgs e)
@@ -54,27 +82,18 @@ namespace ParticleSim
 
             if (checkBoxGrid.Checked == true)           // if option enabled
             {
-                Pen gridPen = new Pen(Color.LightSalmon);
+                displayFrame.DrawGrid(g, panelDisplayArea);
 
-                int gridlines = 100;                    // how many gridlines drawn horizontally and vertically
-                int spacing = 10;                       // space between gridlines in pixels
-
-                for (int i = 0; i <= gridlines; i++)    // draw horizontal gridlines
-                {
-                    g.DrawLine(gridPen, i * spacing, 0, i * spacing, panelDisplayArea.Height);
-                }
-
-                for (int j = 0; j <= gridlines; j++)    // draw vertical gridlines
-                {
-                    g.DrawLine(gridPen, 0, j * spacing, panelDisplayArea.Width, j * spacing);
-                }
-            }
+            }            
 
             List<Particle> particles = init.GetParticles();
             displayFrame.RenderParticles(g, particles, panelDisplayArea, mode);
-        }
 
-        
+            if (checkBoxArrows.Checked == true)
+            {
+                displayFrame.DrawArrows(g, particles);
+            }
+        }        
 
         private void textBoxMass_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -128,24 +147,24 @@ namespace ParticleSim
 
             Color color = Color.FromArgb(rng.Next(256), rng.Next(256), rng.Next(256));  // random colour generation
 
+            if (comboBoxColor.SelectedValue is Color selColor && selColor != Color.Empty)
+            {
+                color = selColor;
+            }
+            else
+            {
+                color = Color.FromArgb(rng.Next(256), rng.Next(256), rng.Next(256));  // fallback to random color
+            }
+
             Dictionary<string, object> particleConfig = new Dictionary<string, object>  // this dictionary is used to generate a 
             {                                                                           // full particle profile                 
                 { "mass", mass },                                                       // before addding it to the list
                 { "speed", speed },
                 { "position", new Vector2(x, y) },
                 { "color", color }
-            };
-
-            try
-            {
-                init.AddNewParticle(particleConfig);                                        // adds new particle to the list
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error creating particle: {ex.GetType().Name} - {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            };           
             
+            init.AddNewParticle(particleConfig);                                        // adds new particle to the list
             panelDisplayArea.Invalidate();                                              // refresh
 
             ClearInputs();
@@ -155,6 +174,7 @@ namespace ParticleSim
         {
             textBoxMass.Clear();                                                        // clear input boxes after use
             textBoxSpeed.Clear();
+            comboBoxColor.SelectedIndex = 0;                                            // reset color selection to "Random"
         }
 
         private void buttonRunReset_Click(object sender, EventArgs e)
@@ -188,8 +208,10 @@ namespace ParticleSim
             List<Particle> particles = init.GetParticles();     // gets particles
 
             running = true;                                     // set running flag
-            timer = new Timer();
-            timer.Interval = 1000 / fps;                        // set timer interval based on fps
+            timer = new Timer
+            {
+                Interval = 1000 / fps                        // set timer interval based on fps
+            };
             timer.Tick += (s, e) =>                             // on each tick of the timer
             {
                 if (running)
@@ -212,6 +234,200 @@ namespace ParticleSim
                 timer.Dispose();                                // dispose of timer
                 timer = null;                                   // clear timer variable        
             }
+        }
+
+        private void panelDisplayArea_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left)                          // only respond to left mouse button
+            {
+                return;
+            }
+            
+            List<Particle> particles = init.GetParticles();             // get current particles
+            Vector2 mousePos = new Vector2(e.X, e.Y);                   // mouse position as Vector2
+
+            float arrowLengthScale = 0.4f;                              // pixels per m/s
+            float headLengthScale = 1f;                                 // arrowhead length for radius 1px
+            float headWidthScale = 0.8f;                                // arrowhead width for radius 1px
+            
+            foreach (Particle p in particles)                           // check each particle
+            {
+                float radius = p.radius;                                // radius of the particle
+                float headLength = radius * headLengthScale;            // length of arrowhead
+                float headWidth = radius * headWidthScale;              // width of arrowhead
+
+                Vector2 velocity  = p.velocity;                             // get velocity vector
+                float speed = velocity.Length();                            // speed is the length of the velocity vector
+
+                Vector2 normal = velocity / speed;                          // normalize velocity to get direction
+                Vector2 start = p.position;                                 // arrow starts at particle position
+                Vector2 end = start + (normal * speed * arrowLengthScale);  // end point based on speed and direction
+
+                Vector2 baseCenter = end - normal * headLength;             // center point of the triangle base
+                Vector2 perp = new Vector2(-normal.Y, normal.X);            // perpendicular to direction
+
+                Vector2 left = baseCenter + perp * (headWidth * 0.5f);      // left base point
+                Vector2 right = baseCenter - perp * (headWidth * 0.5f);     // right base point
+
+                float centerX = (left.X + right.X + end.X) / 3f;          // center of triangle x-coordinate
+                float centerY = (left.Y + right.Y + end.Y) / 3f;          // center of triangle y-coordinate
+
+                float distFromCenter = Vector2.Distance(mousePos, new Vector2(centerX, centerY)); // distance from mouse to center
+                
+                if (distFromCenter <= headWidth)                          // approximate check using distance to center of triangle
+                {
+                    selectedArrow = p;                                    // select this particle's arrow
+                    draggingArrow = true;                                 // enable dragging
+                    StopSimulation();                                     // stop simulation while dragging
+                    return;
+                }             
+
+                float dist = Vector2.Distance(mousePos, p.position);    // distance from mouse to particle center
+                if (dist <= p.radius)                                   // if within particle radius
+                {
+                    selectedParticle = p;                               // select this particle
+                    draggingParticle = true;                            // enable dragging
+                    particleToModify = p;                               // set particle to modify
+
+                    textBoxMassModifier.Text = p.mass.ToString();       // fill modifier fields with current values
+                    textBoxSpeedModifier.Text = Math.Round(p.velocity.Length()).ToString();
+
+                    float angle = (float)(Math.Atan2(-p.velocity.Y, p.velocity.X) * (180f / (float)Math.PI));   // convert velocity vector to angle in degrees
+                    if (angle < 0f)
+                    {
+                        angle += 360f;                                  // ensure angle is positive
+                    }
+                    textBoxAngleModifier.Text = Math.Round(angle).ToString();
+
+                    try
+                    {
+                        comboBoxColorModifier.SelectedValue = p.color;  // set color selection to current particle color
+                    }
+                    catch
+                    {
+                        comboBoxColorModifier.SelectedIndex = 0;        // fallback to "Random" if color not found
+                    }
+
+                    StopSimulation();                                   // stop simulation while dragging
+                    return;
+                }
+            }
+        }
+
+        private void panelDisplayArea_MouseMove(object sender, MouseEventArgs e)
+        {
+            Vector2 mousePos = new Vector2(e.X, e.Y);                               // current mouse position
+
+            if (draggingArrow == true && selectedArrow != null)                     // if dragging an arrow
+            {
+                Vector2 direction = mousePos - selectedArrow.position;              // new direction based on mouse position
+                float speed = selectedArrow.velocity.Length();                      // get speed of particle
+                if (speed > 0f)
+                {
+                    selectedArrow.velocity = Vector2.Normalize(direction) * speed;  // update velocity vector with new direction
+                }
+
+                float angle = (float)(Math.Atan2(-selectedArrow.velocity.Y, selectedArrow.velocity.X) * (180f / (float)Math.PI));   // convert velocity vector to angle in degrees
+                if (angle < 0f)
+                {
+                    angle += 360f;                               // ensure angle is positive
+                } 
+                textBoxAngleModifier.Text = Math.Round(angle).ToString();
+
+                panelDisplayArea.Invalidate();                                      // refresh display
+                return;
+            }
+
+            if (draggingParticle != true || selectedParticle == null)               // if not dragging or no particle selected
+            {
+                return;
+            }
+
+            float newX = e.X;                               // new position based on mouse
+            float newY = e.Y;                                           
+            float radius = selectedParticle.radius;         // radius of selected particle
+
+            if (newX < radius)                              // constrain within panel bounds
+            {
+                newX = radius;                          
+            }
+            if (newX > panelDisplayArea.Width - radius)                 
+            {
+                newX = panelDisplayArea.Width - radius;
+            }
+            if (newY < radius)
+            {
+                newY = radius;
+            }
+            if (newY > panelDisplayArea.Height - radius)
+            {
+                newY = panelDisplayArea.Height - radius;
+            }
+
+            selectedParticle.position = new Vector2(newX, newY);        // update particle position
+            panelDisplayArea.Invalidate();                              // refresh display
+        }
+
+        private void panelDisplayArea_MouseUp(object sender, MouseEventArgs e)
+        {   
+            if (draggingParticle == true || selectedParticle != null)           // if not dragging or no particle selected
+            {
+                draggingParticle = false;                                           // disable dragging
+                selectedParticle = null;                                            // clear selected particle
+                return;
+            }
+
+            if (draggingArrow == true || selectedArrow != null)                 // if not dragging or no particle selected
+            {
+                draggingArrow = false;
+                selectedArrow = null;
+                return;
+            }            
+        }
+
+        private void buttonModifyParticle_Click(object sender, EventArgs e)
+        {
+            if (particleToModify == null)                                                           // no particle selected to modify
+            {
+                MessageBox.Show("No particle selected to modify. Click on a particle to select it.", "No particle selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!float.TryParse(textBoxMassModifier.Text, out float newMass))                       // parse and validate mass input 
+            {
+                MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxMassModifier.Focus();
+                return;
+            }
+
+            if (!float.TryParse(textBoxSpeedModifier.Text, out float newSpeed))                     // parse and validate speed input
+            {
+                MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxSpeedModifier.Focus();
+                return;
+            }
+
+            if (!float.TryParse(textBoxAngleModifier.Text, out float angleDeg))                     // parse and validate angle input
+            {
+                MessageBox.Show("Angle must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxAngleModifier.Focus();
+                return;
+            }
+
+            angleDeg = angleDeg % 360f;                                                             // normalize angle to [0, 360]
+            float angleRad = angleDeg * ((float)Math.PI / 180f);                                    // convert to radians
+            Vector2 newVelocity = new Vector2((float)Math.Cos(angleRad) * newSpeed, -(float)Math.Sin(angleRad) * newSpeed);     // compute new velocity vector
+
+            particleToModify.mass = newMass;                          // update mass
+            particleToModify.velocity = newVelocity;                  // update velocity
+
+            if (comboBoxColorModifier.SelectedValue is Color selColor)
+            {
+                particleToModify.color = selColor;                    // update color
+            }
+
+            init.ScaleRadii(init.GetParticles());                     // rescale radii based on new mass
+            panelDisplayArea.Invalidate();                            // refresh display
         }
     }
 }

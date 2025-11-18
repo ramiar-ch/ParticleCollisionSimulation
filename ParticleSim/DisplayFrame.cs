@@ -11,7 +11,6 @@ namespace ParticleSim
 {
     public class DisplayFrame
     {
-
         public DisplayFrame()
         {
             Panel panelDisplayArea = new Panel();

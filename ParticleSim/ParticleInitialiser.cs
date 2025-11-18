@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
@@ -17,9 +18,9 @@ namespace ParticleSim
         public ParticleInitialiser()
         {
             
-        }       
+        }     
 
-        public void AddNewParticle(Dictionary<string, object> config)
+        public void AddNewParticle(Dictionary<string, object> config, int mode)
         {
             particleCount = particles.Count;
            
@@ -34,40 +35,85 @@ namespace ParticleSim
             Particle newParticle = new Particle(id, mass, 5, position, velocity, color);
             particles.Add(newParticle);
 
-            ScaleRadii(particles);
+            ScaleRadii(particles, mode);
         }
-        public List<Particle> ScaleRadii(List<Particle> particles)
+        
+        public Particle AddGasParticle(SimulationManager simManager, Dictionary<string,object> config, int mode, float heat )
         {
-            float maxRadius = 25f;              // max and min bounds for the radius
-            float minRadius = 15f;
+            particleCount = particles.Count;
 
-            if (particles.Count == 0)
-            {
-                return particles;               // nothing to scale
-            }
+            int id = particleCount + 1;
+            float mass = (float)config["mass"];
+            float avgSpeed = (float)config["speed"];
+            Vector2 position = (Vector2)config["position"];
+            Color color = Color.Red;
 
-            List<double> logMasses = particles.Select(p => Math.Log(p.mass)).ToList();       // get natural log of all masses and put in a list
-            double logMax = logMasses.Max();                                                 // get max and min log masses
-            double logMin = logMasses.Min();
+            Vector2 velocity = DistributeGasVelocities(avgSpeed, heat);
 
-            foreach(Particle p in particles)                                                 // loops through every particle
-            {
-                float scaledRadius; 
-                double logMass = Math.Log(p.mass);                                           // get log mass of current particle        
-
-                if (logMin == logMax)                                                        // if all masses are the same
-                {                                                                            // this is important for the first particle   
-                    scaledRadius = maxRadius;
-                }
-                else
-                {                                                                            // scale radius logarithmically between min and max radius                
-                    scaledRadius = (float)((logMass - logMin) / (logMax - logMin) * (maxRadius - minRadius) + minRadius);
-                }
-                p.radius = scaledRadius;                                                     // sets radius of particle
-            }
-
-            return particles;            
+            Particle newParticle = new Particle(id, mass, 5, position, velocity, color);
+            particles.Add(newParticle);            
+            
+            return newParticle;
         }
+
+        public Vector2 DistributeGasVelocities(float avgSpeed, float heat)
+        {
+            float sigma = (float)(avgSpeed * Math.Sqrt(2.0 / Math.PI) * heat);
+
+            float velocityX = (float)MathNet.Numerics.Distributions.Normal.Sample(0, sigma);
+            float velocityY = (float)MathNet.Numerics.Distributions.Normal.Sample(0, sigma);
+
+            return new Vector2(velocityX, velocityY);
+        }
+
+
+        public List<Particle> ScaleRadii(List<Particle> particles, int mode)
+        {   
+            if (mode == 1 || mode == 2)
+            {
+                float maxRadius = 25f;              // max and min bounds for the radius
+                float minRadius = 15f;
+
+                if (particles.Count == 0)
+                {
+                    return particles;               // nothing to scale
+                }
+
+                List<double> logMasses = particles.Select(p => Math.Log(p.mass)).ToList();       // get natural log of all masses and put in a list
+                double logMax = logMasses.Max();                                                 // get max and min log masses
+                double logMin = logMasses.Min();
+
+                foreach (Particle p in particles)                                                 // loops through every particle
+                {
+                    float scaledRadius;
+                    double logMass = Math.Log(p.mass);                                           // get log mass of current particle        
+
+                    if (logMin == logMax)                                                        // if all masses are the same
+                    {                                                                            // this is important for the first particle   
+                        scaledRadius = maxRadius;
+                    }
+                    else
+                    {                                                                            // scale radius logarithmically between min and max radius                
+                        scaledRadius = (float)((logMass - logMin) / (logMax - logMin) * (maxRadius - minRadius) + minRadius);
+                    }
+                    p.radius = scaledRadius;                                                     // sets radius of particle
+                }                
+            }
+            
+            return particles;
+        }
+
+        public float GetGasRadius(int quantity, int[] bounds)
+        {
+            float areaPanel = bounds[0] * bounds[1];             // area of panel in pixels
+            float areaParticles = areaPanel * 0.10f;             // particles occupy 10% of area
+            float areaPerParticle = areaParticles / quantity;    // area allocated per particle
+
+            float radius = (float)Math.Sqrt(areaPerParticle / Math.PI); // radius from area of circle formula
+
+            return radius;
+        }
+
         public List<Particle> GetParticles()
         {
             return particles;

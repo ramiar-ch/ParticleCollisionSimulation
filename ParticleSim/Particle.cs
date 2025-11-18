@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace ParticleSim
 {
-
     public class Particle
     {
         public int id;

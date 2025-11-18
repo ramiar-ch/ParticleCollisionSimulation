@@ -163,7 +163,7 @@ namespace ParticleSim
                 { "color", color }
             };
 
-            init.AddNewParticle(particleConfig);                                        // adds new particle to the list
+            init.AddNewParticle(particleConfig, mode);                                        // adds new particle to the list
             panelDisplayArea.Invalidate();                                              // refresh
 
             ClearInputs();
@@ -214,7 +214,7 @@ namespace ParticleSim
             {
                 if (running)                                    
                 {   
-                    simManager.DetectCollisions(particles);     // check for collisions between particles
+                    simManager.DetectCollisions(particles, mode);     // check for collisions between particles
                     simManager.UpdateParticles(particles, timer.Interval);   // update particle positions based on their velocities
                 }
                 panelDisplayArea.Invalidate();                  // redraw display area
@@ -378,8 +378,15 @@ namespace ParticleSim
                 particleToModify.color = selColor;                    // update color
             }
 
-            init.ScaleRadii(init.GetParticles());                     // rescale radii based on new mass
+            init.ScaleRadii(init.GetParticles(), mode);                     // rescale radii based on new mass
             panelDisplayArea.Invalidate();                            // refresh display
+        }
+
+        private void buttonArrowBack_Click(object sender, EventArgs e)
+        {
+            Form form = new StartMenu();          // navigate back to start menu
+            form.Show();
+            this.Hide();
         }
     }
 }

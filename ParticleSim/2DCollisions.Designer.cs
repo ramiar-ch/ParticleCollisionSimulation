@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(_2DCollisions));
             this.panelDisplayArea = new System.Windows.Forms.Panel();
             this.panelParticleInitialiser = new System.Windows.Forms.Panel();
             this.comboBoxColor = new System.Windows.Forms.ComboBox();
@@ -53,6 +54,7 @@
             this.textBoxMass = new System.Windows.Forms.TextBox();
             this.labelSpeed = new System.Windows.Forms.Label();
             this.labelMass = new System.Windows.Forms.Label();
+            this.buttonArrowBack = new System.Windows.Forms.Button();
             this.panelParticleInitialiser.SuspendLayout();
             this.panelModifer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarElasticity)).BeginInit();
@@ -61,9 +63,9 @@
             // panelDisplayArea
             // 
             this.panelDisplayArea.BackColor = System.Drawing.Color.White;
-            this.panelDisplayArea.Location = new System.Drawing.Point(32, 27);
+            this.panelDisplayArea.Location = new System.Drawing.Point(19, 33);
             this.panelDisplayArea.Name = "panelDisplayArea";
-            this.panelDisplayArea.Size = new System.Drawing.Size(740, 370);
+            this.panelDisplayArea.Size = new System.Drawing.Size(755, 364);
             this.panelDisplayArea.TabIndex = 0;
             this.panelDisplayArea.Paint += new System.Windows.Forms.PaintEventHandler(this.panelDisplayArea_Paint);
             this.panelDisplayArea.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelDisplayArea_MouseDown);
@@ -273,6 +275,7 @@
             this.trackBarElasticity.Name = "trackBarElasticity";
             this.trackBarElasticity.Size = new System.Drawing.Size(162, 56);
             this.trackBarElasticity.TabIndex = 14;
+            this.trackBarElasticity.Scroll += new System.EventHandler(this.trackBarElasticity_Scroll);
             // 
             // checkBoxGrid
             // 
@@ -328,12 +331,28 @@
             this.labelMass.TabIndex = 8;
             this.labelMass.Text = "Mass";
             // 
+            // buttonArrowBack
+            // 
+            this.buttonArrowBack.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
+            this.buttonArrowBack.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.buttonArrowBack.FlatAppearance.BorderSize = 0;
+            this.buttonArrowBack.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonArrowBack.Image = ((System.Drawing.Image)(resources.GetObject("buttonArrowBack.Image")));
+            this.buttonArrowBack.Location = new System.Drawing.Point(19, -1);
+            this.buttonArrowBack.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonArrowBack.Name = "buttonArrowBack";
+            this.buttonArrowBack.Size = new System.Drawing.Size(35, 35);
+            this.buttonArrowBack.TabIndex = 17;
+            this.buttonArrowBack.UseVisualStyleBackColor = false;
+            this.buttonArrowBack.Click += new System.EventHandler(this.buttonArrowBack_Click);
+            // 
             // _2DCollisions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
             this.ClientSize = new System.Drawing.Size(800, 699);
+            this.Controls.Add(this.buttonArrowBack);
             this.Controls.Add(this.checkBoxArrows);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.trackBarElasticity);
@@ -386,5 +405,6 @@
         private System.Windows.Forms.Label labelSpeedModifier;
         private System.Windows.Forms.TextBox textBoxAngleModifier;
         private System.Windows.Forms.Button buttonModifyParticle;
+        private System.Windows.Forms.Button buttonArrowBack;
     }
 }

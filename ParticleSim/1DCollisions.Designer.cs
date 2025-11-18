@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(_1DCollisions));
             this.panelDisplayArea = new System.Windows.Forms.Panel();
             this.panelParticleInitialiser = new System.Windows.Forms.Panel();
             this.comboBoxColor = new System.Windows.Forms.ComboBox();
@@ -51,6 +52,7 @@
             this.labelSpeedModifier = new System.Windows.Forms.Label();
             this.textBoxMassModifier = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.buttonArrowBack = new System.Windows.Forms.Button();
             this.panelParticleInitialiser.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarElasticity)).BeginInit();
             this.panelParticleCustomiser.SuspendLayout();
@@ -59,7 +61,7 @@
             // panelDisplayArea
             // 
             this.panelDisplayArea.BackColor = System.Drawing.SystemColors.Window;
-            this.panelDisplayArea.Location = new System.Drawing.Point(12, 22);
+            this.panelDisplayArea.Location = new System.Drawing.Point(12, 36);
             this.panelDisplayArea.Name = "panelDisplayArea";
             this.panelDisplayArea.Size = new System.Drawing.Size(776, 100);
             this.panelDisplayArea.TabIndex = 0;
@@ -82,9 +84,9 @@
             this.panelParticleInitialiser.Controls.Add(this.labelSpeed);
             this.panelParticleInitialiser.Controls.Add(this.labelMass);
             this.panelParticleInitialiser.Controls.Add(this.buttonCreateParticle);
-            this.panelParticleInitialiser.Location = new System.Drawing.Point(461, 143);
+            this.panelParticleInitialiser.Location = new System.Drawing.Point(461, 152);
             this.panelParticleInitialiser.Name = "panelParticleInitialiser";
-            this.panelParticleInitialiser.Size = new System.Drawing.Size(327, 295);
+            this.panelParticleInitialiser.Size = new System.Drawing.Size(327, 286);
             this.panelParticleInitialiser.TabIndex = 1;
             // 
             // comboBoxColor
@@ -192,7 +194,7 @@
             // buttonCreateParticle
             // 
             this.buttonCreateParticle.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonCreateParticle.Location = new System.Drawing.Point(112, 246);
+            this.buttonCreateParticle.Location = new System.Drawing.Point(112, 235);
             this.buttonCreateParticle.Name = "buttonCreateParticle";
             this.buttonCreateParticle.Size = new System.Drawing.Size(92, 31);
             this.buttonCreateParticle.TabIndex = 0;
@@ -306,17 +308,33 @@
             this.label1.TabIndex = 23;
             this.label1.Text = "Colour";
             // 
+            // buttonArrowBack
+            // 
+            this.buttonArrowBack.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
+            this.buttonArrowBack.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.buttonArrowBack.FlatAppearance.BorderSize = 0;
+            this.buttonArrowBack.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonArrowBack.Image = ((System.Drawing.Image)(resources.GetObject("buttonArrowBack.Image")));
+            this.buttonArrowBack.Location = new System.Drawing.Point(15, 0);
+            this.buttonArrowBack.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonArrowBack.Name = "buttonArrowBack";
+            this.buttonArrowBack.Size = new System.Drawing.Size(35, 35);
+            this.buttonArrowBack.TabIndex = 6;
+            this.buttonArrowBack.UseVisualStyleBackColor = false;
+            this.buttonArrowBack.Click += new System.EventHandler(this.buttonArrowBack_Click);
+            // 
             // _1DCollisions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.panelDisplayArea);
+            this.Controls.Add(this.buttonArrowBack);
             this.Controls.Add(this.panelParticleCustomiser);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.buttonRunReset);
             this.Controls.Add(this.panelParticleInitialiser);
-            this.Controls.Add(this.panelDisplayArea);
             this.Name = "_1DCollisions";
             this.Text = "Collisions in One Dimension";
             this.panelParticleInitialiser.ResumeLayout(false);
@@ -353,5 +371,6 @@
         private System.Windows.Forms.Label labelSpeedModifier;
         private System.Windows.Forms.TextBox textBoxMassModifier;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button buttonArrowBack;
     }
 }

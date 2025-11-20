@@ -192,6 +192,10 @@ namespace ParticleSim
                 {
                     simManager.DetectCollisions(particles, mode);     // check for collisions between particles
                     simManager.UpdateParticles(particles, timer.Interval, heat);   // update particle positions based on their velocities
+                
+                    float pressure = simManager.GetPressure();          // calculate pressure
+
+                    textBoxPressure.Text = Math.Round(pressure, 2).ToString();   // update pressure textbox
                 }
                 panelDisplayArea.Invalidate();                  // redraw display area
             };
@@ -226,6 +230,6 @@ namespace ParticleSim
         private void trackBarElasticity_Scroll(object sender, EventArgs e)
         {
 
-        }
+        }        
     }
 }

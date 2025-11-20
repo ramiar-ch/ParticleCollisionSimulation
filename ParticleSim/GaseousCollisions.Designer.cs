@@ -268,6 +268,7 @@
             // 
             this.textBoxPressure.Location = new System.Drawing.Point(122, 14);
             this.textBoxPressure.Name = "textBoxPressure";
+            this.textBoxPressure.ReadOnly = true;
             this.textBoxPressure.Size = new System.Drawing.Size(162, 22);
             this.textBoxPressure.TabIndex = 17;
             // 

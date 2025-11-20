@@ -17,7 +17,8 @@ namespace ParticleSim
         private float restitution = 1f;             // default to elastic
         private Random rng = new Random();          // random number generator
         private Quadtree quadtree;                  // quadtree for spatial partitioning
-        
+
+        private Queue<float> impulseHistory = new Queue<float>(30);
 
         public SimulationManager()
         {
@@ -206,16 +207,24 @@ namespace ParticleSim
             int width = bounds[0];
             int height = bounds[1];
 
+            Vector2 normal = new Vector2();
+            float impulse = 0f;
+            float impulseTotal = 0f;
+            
             if (particle == null)
             {
                 return;
             }
 
             float radius = particle.radius;
+            
 
             // left boundary 
             if (particle.position.X - radius < 0f)
             {
+                normal = new Vector2(1, 0);
+                impulse = Vector2.Dot(particle.velocity, normal) * particle.mass;
+                impulseTotal += Math.Abs(impulse);
                 particle.position.X = radius;                   // reset position to boundary
                 particle.velocity.X = -particle.velocity.X;     // reverse velocity    
             }
@@ -223,23 +232,55 @@ namespace ParticleSim
             // right boundary
             if (particle.position.X + radius > width)
             {
+                normal = new Vector2(-1, 0);
+                impulse = Vector2.Dot(particle.velocity, normal) * particle.mass;
+                impulseTotal += Math.Abs(impulse);
                 particle.position.X = width - radius;           // reset position to boundary
                 particle.velocity.X = -particle.velocity.X;     // reverse velocity
+            }
+
+            // bottom boundary
+            if (particle.position.Y + radius > height)
+            {
+                normal = new Vector2(0, 1);
+                impulse = Vector2.Dot(particle.velocity, normal) * particle.mass;
+                impulseTotal += Math.Abs(impulse);
+                particle.position.Y = height - radius;          // reset position to boundary
+                particle.velocity.Y = -particle.velocity.Y;     // reverse velocity
             }
 
             // top boundary
             if (particle.position.Y - radius < 0f)              
             {
-                particle.position.Y = radius;                     // reset position to boundary
+                normal = new Vector2(0, -1);
+                impulse = Vector2.Dot(particle.velocity, normal) * particle.mass;
+                impulseTotal += Math.Abs(impulse);
+                particle.position.Y = radius;                   // reset position to boundary
                 particle.velocity.Y = -particle.velocity.Y;     // reverse velocity    
             }
 
-            // bottom boundary
-            if (particle.position.Y + radius > height)          
+            impulseHistory.Enqueue(impulseTotal);
+        }
+
+        public float GetPressure()
+        {   
+            if (impulseHistory.Count >= 30)
             {
-                particle.position.Y = height - radius;          // reset position to boundary
-                particle.velocity.Y = -particle.velocity.Y;     // reverse velocity
+                impulseHistory.Dequeue();                
             }
+
+            float totalImpulse = 0f;
+            foreach(float impulse in impulseHistory)
+            {
+                totalImpulse += impulse;
+            }
+                        
+            float wallLength = 2f * (bounds[0] + bounds[1]);      // total wall length
+
+            float interval = impulseHistory.Count / 30f;
+            float pressure = totalImpulse / (wallLength * interval);
+
+            return pressure;
         }
 
         public void InsertParticleToQuadtree(Particle particle)

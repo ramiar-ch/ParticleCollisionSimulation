@@ -111,6 +111,9 @@
     <EmbeddedResource Include="1DCollisions.resx">
       <DependentUpon>1DCollisions.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="RelativisticCollisions.resx">
+      <DependentUpon>RelativisticCollisions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="StartMenu.resx">
       <DependentUpon>StartMenu.cs</DependentUpon>
     </EmbeddedResource>

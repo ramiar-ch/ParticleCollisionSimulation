@@ -215,7 +215,7 @@ namespace ParticleSim
                 if (running)                                    
                 {   
                     simManager.DetectCollisions(particles, mode);     // check for collisions between particles
-                    simManager.UpdateParticles(particles, timer.Interval);   // update particle positions based on their velocities
+                    simManager.UpdateParticles(particles, timer.Interval, mode);   // update particle positions based on their velocities
                 }
                 panelDisplayArea.Invalidate();                  // redraw display area
             };

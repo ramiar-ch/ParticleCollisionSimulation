@@ -38,20 +38,77 @@ namespace ParticleSim
             restitution = elasticity;
         }
 
-        public List<Particle> UpdateParticles(List<Particle> particles, float timeChange, float heat = 1)
+        public List<Particle> UpdateParticles(List<Particle> particles, float timeChange, int mode, float heat = 1)
         {
-            List<Particle> updatedParticles = new List<Particle>(particles.Count);
+            List<Particle> updatedParticles = new List<Particle>(particles.Count);         
+            
+            
             foreach (Particle p in particles)
             {
                 p.position = p.position + (p.velocity * heat) * (timeChange / 1000f);
                 EnforceBoundary(p);
                 updatedParticles.Add(p);
             }
+            
 
             return updatedParticles;
         }
 
-       public Vector2 GetValidPosition(float radius)
+        public List<Particle> UpdateRelativisticParticles(List<Particle> particles, float timeChange, int frame)
+        {
+            List<Particle> updatedParticles = new List<Particle>(2);
+
+            if (frame == 1)
+            {
+                foreach (Particle p in particles)
+                {
+                    p.position.X = p.position.X + (p.velocity.X * 100) * (timeChange / 1000f);
+                    updatedParticles.Add(p);
+                }
+            }
+            else if (frame == 2)
+            {
+                float velocityCM = GetCMVelocity(particles);
+
+                foreach (Particle p in particles)
+                {
+                    float labVelocityX = p.velocity.X;
+                    float cmVelocityX = (labVelocityX - velocityCM) / (1f - velocityCM * labVelocityX);
+                    p.position.X = p.position.X + (cmVelocityX * 100) * (timeChange / 1000f);
+                    updatedParticles.Add(p);
+                }
+            }
+
+
+            return updatedParticles;
+        }
+
+        public float GetCMVelocity(List<Particle> particles)
+        {
+            float momentum = 0f;
+            float energy = 0f;
+            foreach (Particle p in particles)
+            {
+                float labVelocityX = p.velocity.X;
+                float gamma = 1f / (float)Math.Sqrt(1f - labVelocityX * labVelocityX);
+                momentum += gamma * p.mass * labVelocityX;
+                energy += gamma * p.mass;
+            }
+            float velocityCM = momentum / energy;
+            return velocityCM;
+        }
+
+        public void GetCMTime(TimeSpan labTime)
+        {
+            float momentum = 0f;
+            float energy = 0f;
+
+            
+
+            float velocityCM = momentum / energy;
+        }
+
+        public Vector2 GetValidPosition(float radius)
         {   
             int width = bounds[0];                                      // area dimensions
             int height = bounds[1];
@@ -97,9 +154,9 @@ namespace ParticleSim
             float fallbackY = (float)(rng.NextDouble() * (height - 2 * margin) + margin);
 
             return new Vector2(fallbackX, fallbackY);               // return last generated position as fallback
-        }       
+        }
 
-        public void DetectCollisions(List<Particle> particles, int mode)
+        public void DetectCollisions(List<Particle> particles, int mode, bool lab = false)
         {
             if (particles == null || particles.Count < 2)
             {
@@ -107,6 +164,34 @@ namespace ParticleSim
             }
 
             if (mode == 1 || mode == 2) 
+            {
+                for (int i = 0; i < particles.Count - 1; i++)                   // check each unique particle pair
+                {
+                    Particle particleA = particles[i];
+                    for (int j = i + 1; j < particles.Count; j++)
+                    {
+                        Particle particleB = particles[j];
+
+                        Vector2 displacement = particleB.position - particleA.position; // vector from A to B
+
+                        float distanceSquared = displacement.LengthSquared();   // avoid sqrt for efficiency
+                        float radiusSum = particleA.radius + particleB.radius;  // sum of radii
+                        if (distanceSquared <= radiusSum * radiusSum)           // collision detected 
+                        {
+                            if (lab)
+                            {
+                                LabCollision(particleA, particleB);            // resolve collision in lab frame
+                            }
+                            else
+                            {
+                                CMCollision(particleA, particleB);             // resolve collision in center of mass frame
+                            }                         
+                        }
+                    }
+                }
+            }
+
+            if (mode == 3)
             {
                 for (int i = 0; i < particles.Count - 1; i++)                   // check each unique particle pair
                 {
@@ -202,6 +287,64 @@ namespace ParticleSim
             particleB.velocity = new Vector2(velocityB, particleB.velocity.Y);
         }
 
+        public void LabCollision(Particle particleA, Particle particleB)
+        {
+            if (particleA == null || particleB == null || particleA.mass <= 0f || particleB.mass <= 0f)
+            {
+                return;                                 // null check and mass check
+            }
+
+            float velocityA = particleA.velocity.X;
+            float velocityB = particleB.velocity.X;
+
+            float gammaA = 1f / (float)Math.Sqrt(1f - velocityA * velocityA);
+            float gammaB = 1f / (float)Math.Sqrt(1f - velocityB * velocityB);
+
+            float momentumA = gammaA * particleA.mass * velocityA;
+            float momentumB = gammaB * particleB.mass * velocityB;
+            float energyTotal = gammaA * particleA.mass + gammaB * particleB.mass; // total energy  
+
+            float velocityCoM = (momentumA + momentumB) / energyTotal;    // center of mass velocity
+
+            float velocityACoM = (velocityA - velocityCoM) / (1f - velocityCoM * velocityA);   // velocity of A in CoM frame
+            float velocityBCoM = (velocityB - velocityCoM) / (1f - velocityCoM * velocityB);   // velocity of B in CoM frame
+
+            velocityA = (velocityCoM + -velocityACoM) / (1f + velocityCoM * -velocityACoM); // A's new velocity in lab frame
+            velocityB = (velocityCoM + -velocityBCoM) / (1f + velocityCoM * -velocityBCoM); // B's new velocity in lab frame
+
+            particleA.velocity = new Vector2(velocityA, 0f);    // update velocities
+            particleB.velocity = new Vector2(velocityB, 0f);
+
+        }
+
+        public void CMCollision(Particle particleA, Particle particleB)
+        {
+            if (particleA == null || particleB == null || particleA.mass <= 0f || particleB.mass <= 0f)
+            {
+                return;                                 // null check and mass check
+            }
+
+            float velocityA = particleA.velocity.X;
+            float velocityB = particleB.velocity.X;
+
+            float gammaA = 1f / (float)Math.Sqrt(1f - velocityA * velocityA);
+            float gammaB = 1f / (float)Math.Sqrt(1f - velocityB * velocityB);
+
+            float momentumA = gammaA * particleA.mass * velocityA;
+            float momentumB = gammaB * particleB.mass * velocityB;
+            float energyTotal = gammaA * particleA.mass + gammaB * particleB.mass; // total energy  
+
+            float velocityCoM = (momentumA + momentumB) / energyTotal;    // center of mass velocity
+
+            velocityA = (velocityA - velocityCoM) / (1f - velocityCoM * velocityA);   // velocity of A in CoM frame
+            velocityB = (velocityB - velocityCoM) / (1f - velocityCoM * velocityB);   // velocity of B in CoM frame
+
+
+            particleA.velocity = new Vector2(velocityA, 0f);    // update velocities
+            particleB.velocity = new Vector2(velocityB, 0f);
+        }
+
+        
         public void EnforceBoundary(Particle particle)
         {
             int width = bounds[0];

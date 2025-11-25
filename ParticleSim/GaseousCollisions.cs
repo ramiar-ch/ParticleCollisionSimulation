@@ -134,6 +134,7 @@ namespace ParticleSim
                     { "mass", mass },
                     { "speed", avgSpeed },
                     { "position", position},
+                    { "radius", radius },
                     { "color", Color.Red }
                 };
                     
@@ -191,7 +192,7 @@ namespace ParticleSim
                 if (running)
                 {
                     simManager.DetectCollisions(particles, mode);     // check for collisions between particles
-                    simManager.UpdateParticles(particles, timer.Interval, heat);   // update particle positions based on their velocities
+                    simManager.UpdateParticles(particles, timer.Interval, mode, heat);   // update particle positions based on their velocities
                 
                     float pressure = simManager.GetPressure();          // calculate pressure
 

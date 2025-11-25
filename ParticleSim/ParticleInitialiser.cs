@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ParticleSim
 {
@@ -45,14 +46,42 @@ namespace ParticleSim
             int id = particleCount + 1;
             float mass = (float)config["mass"];
             float avgSpeed = (float)config["speed"];
+            float radius = (float)config["radius"];
             Vector2 position = (Vector2)config["position"];
             Color color = Color.Red;
 
             Vector2 velocity = DistributeGasVelocities(avgSpeed, heat);
 
-            Particle newParticle = new Particle(id, mass, 5, position, velocity, color);
+            Particle newParticle = new Particle(id, mass, radius, position, velocity, color);
             particles.Add(newParticle);            
             
+            return newParticle;
+        }
+
+        public Particle AddRelativisticParticle(Panel panel, float mass, float speed, Color color )
+        {
+            particleCount = particles.Count;
+            int id = particleCount + 1;
+
+            Vector2 position = new Vector2(0, 0);
+            Vector2 direction = new Vector2(0, 0);
+
+            if (id % 2 == 1)
+            {
+                position = new Vector2(panel.Height / 2, panel.Height / 2);
+                direction = new Vector2(1, 0); // first particle goes right
+
+            }
+            if (id % 2 == 0)
+            {   
+                position = new Vector2(panel.Width - panel.Height / 2, panel.Height / 2);
+                direction = new Vector2(-1, 0); // second particle goes left
+            }
+
+            Vector2 velocity = speed * direction;
+
+            Particle newParticle = new Particle(id, mass, 10, position, velocity, color);
+            particles.Add(newParticle);
             return newParticle;
         }
 

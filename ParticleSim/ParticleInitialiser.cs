@@ -60,29 +60,29 @@ namespace ParticleSim
 
         public Particle AddRelativisticParticle(Panel panel, float mass, float speed, Color color )
         {
-            particleCount = particles.Count;
+            particleCount = particles.Count;        
             int id = particleCount + 1;
 
-            Vector2 position = new Vector2(0, 0);
+            Vector2 position = new Vector2(0, 0);                                           // placeholders for vectors
             Vector2 direction = new Vector2(0, 0);
 
             if (id % 2 == 1)
             {
-                position = new Vector2(panel.Height / 2, panel.Height / 2);
-                direction = new Vector2(1, 0); // first particle goes right
+                position = new Vector2(panel.Height / 2, panel.Height / 2);     
+                direction = new Vector2(1, 0);                                              // first particle goes right
 
             }
             if (id % 2 == 0)
             {   
                 position = new Vector2(panel.Width - panel.Height / 2, panel.Height / 2);
-                direction = new Vector2(-1, 0); // second particle goes left
+                direction = new Vector2(-1, 0);                                             // second particle goes left
             }
 
-            Vector2 velocity = speed * direction;
+            Vector2 velocity = speed * direction;                                           // velocity vector
 
-            Particle newParticle = new Particle(id, mass, 10, position, velocity, color);
-            particles.Add(newParticle);
-            return newParticle;
+            Particle newParticle = new Particle(id, mass, 10, position, velocity, color);   // make particle
+            particles.Add(newParticle);                                                     // add to internal list
+            return newParticle;                                                             // return particle
         }
 
         public Vector2 DistributeGasVelocities(float avgSpeed, float heat)

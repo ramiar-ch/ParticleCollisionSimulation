@@ -178,29 +178,26 @@ namespace ParticleSim
 
         private void StartSimulation()
         {
-            StopSimulation();                                   // ensures that any existing simulation is stopped first
+            StopSimulation();                                                       // ensures simulation is stopped before starting
 
-            List<Particle> particles = init.GetParticles();     // gets particles
+            List<Particle> particles = init.GetParticles();                         // gets particles
 
-            running = true;                                     // set running flag
-            timer = new Timer
-            {
-                Interval = 1000 / fps                        // set timer interval based on fps
-            };
-            timer.Tick += (s, e) =>                             // on each tick of the timer
+            running = true;                                                         // set running flag
+            timer = new Timer();
+            timer.Interval = 1000 / fps;                                            // set timer interval 
+            timer.Tick += (s, e) =>                                                 // for each tick 
             {
                 if (running)
                 {
-                    simManager.DetectCollisions(particles, mode);     // check for collisions between particles
+                    simManager.DetectCollisions(particles, mode);                   // check for collisions between particles
                     simManager.UpdateParticles(particles, timer.Interval, mode, heat);   // update particle positions based on their velocities
                 
-                    float pressure = simManager.GetPressure();          // calculate pressure
-
-                    textBoxPressure.Text = Math.Round(pressure, 2).ToString();   // update pressure textbox
+                    float pressure = simManager.GetPressure();                      // calculate pressure
+                    textBoxPressure.Text = Math.Round(pressure, 2).ToString();      // update pressure textbox
                 }
-                panelDisplayArea.Invalidate();                  // redraw display area
+                panelDisplayArea.Invalidate();                                      // redraw display area
             };
-            timer.Start();                                      // start the timer
+            timer.Start();                                                          // start the timer
         }
 
         private void StopSimulation()

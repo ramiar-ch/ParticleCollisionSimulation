@@ -18,7 +18,7 @@ namespace ParticleSim
         private Random rng = new Random();          // random number generator
         private Quadtree quadtree;                  // quadtree for spatial partitioning
 
-        private Queue<float> impulseHistory = new Queue<float>(30);
+        private Queue<float> impulseHistory = new Queue<float>(30); // queue to store impulse for pressure calc 
 
         public SimulationManager()
         {
@@ -40,25 +40,23 @@ namespace ParticleSim
 
         public List<Particle> UpdateParticles(List<Particle> particles, float timeChange, int mode, float heat = 1)
         {
-            List<Particle> updatedParticles = new List<Particle>(particles.Count);         
-            
-            
+            List<Particle> updatedParticles = new List<Particle>(particles.Count);      // list to hold updated particles  
+
             foreach (Particle p in particles)
             {
-                p.position = p.position + (p.velocity * heat) * (timeChange / 1000f);
-                EnforceBoundary(p);
-                updatedParticles.Add(p);
-            }
-            
+                p.position = p.position + (p.velocity * heat) * (timeChange / 1000f);   // update position
+                EnforceBoundary(p);                                                     // enforce boundary conditions
+                updatedParticles.Add(p);                                                // add to updated list
+            }            
 
-            return updatedParticles;
+            return updatedParticles;                                                    // return updated particles
         }
 
         public List<Particle> UpdateRelativisticParticles(List<Particle> particles, float timeChange, int frame)
         {
-            List<Particle> updatedParticles = new List<Particle>(2);
+            List<Particle> updatedParticles = new List<Particle>(2);        // new list of two particles
 
-            if (frame == 1)
+            if (frame == 1)                                                 // lab frame
             {
                 foreach (Particle p in particles)
                 {
@@ -66,47 +64,40 @@ namespace ParticleSim
                     updatedParticles.Add(p);
                 }
             }
-            else if (frame == 2)
+
+            else if (frame == 2)                                            // cm frame
             {
-                float velocityCM = GetCMVelocity(particles);
+                float velocityCM = GetCMVelocity(particles);                // get velocity of centre of mass
 
                 foreach (Particle p in particles)
                 {
                     float labVelocityX = p.velocity.X;
-                    float cmVelocityX = (labVelocityX - velocityCM) / (1f - velocityCM * labVelocityX);
-                    p.position.X = p.position.X + (cmVelocityX * 100) * (timeChange / 1000f);
+                    float cmVelocityX = (labVelocityX - velocityCM) / (1f - velocityCM * labVelocityX);     // lorentz transformation
+                    p.position.X = p.position.X + (cmVelocityX * 100) * (timeChange / 1000f);               // update position
                     updatedParticles.Add(p);
                 }
             }
-
 
             return updatedParticles;
         }
 
         public float GetCMVelocity(List<Particle> particles)
         {
-            float momentum = 0f;
+            float momentum = 0f;                            // initialise momentum and energy
             float energy = 0f;
-            foreach (Particle p in particles)
+
+            foreach (Particle p in particles)      
             {
-                float labVelocityX = p.velocity.X;
-                float gamma = 1f / (float)Math.Sqrt(1f - labVelocityX * labVelocityX);
-                momentum += gamma * p.mass * labVelocityX;
-                energy += gamma * p.mass;
+                float labVelocityX = p.velocity.X;          // get lab frame velocity
+                float gamma = 1f / (float)Math.Sqrt(1f - labVelocityX * labVelocityX);      // lorentz factor
+                momentum += gamma * p.mass * labVelocityX;  // total momentum
+                energy += gamma * p.mass;                   // total energy
             }
-            float velocityCM = momentum / energy;
+
+            float velocityCM = momentum / energy;           // center of momentum velocity
+
             return velocityCM;
-        }
-
-        public void GetCMTime(TimeSpan labTime)
-        {
-            float momentum = 0f;
-            float energy = 0f;
-
-            
-
-            float velocityCM = momentum / energy;
-        }
+        }        
 
         public Vector2 GetValidPosition(float radius)
         {   
@@ -156,11 +147,11 @@ namespace ParticleSim
             return new Vector2(fallbackX, fallbackY);               // return last generated position as fallback
         }
 
-        public void DetectCollisions(List<Particle> particles, int mode, bool lab = false)
+        public void DetectCollisions(List<Particle> particles, int mode, int frame = 1)
         {
             if (particles == null || particles.Count < 2)
             {
-                return;                                                     // null check
+                return;                                                         // null check
             }
 
             if (mode == 1 || mode == 2) 
@@ -178,14 +169,7 @@ namespace ParticleSim
                         float radiusSum = particleA.radius + particleB.radius;  // sum of radii
                         if (distanceSquared <= radiusSum * radiusSum)           // collision detected 
                         {
-                            if (lab)
-                            {
-                                LabCollision(particleA, particleB);            // resolve collision in lab frame
-                            }
-                            else
-                            {
-                                CMCollision(particleA, particleB);             // resolve collision in center of mass frame
-                            }                         
+                            ResolveCollisions(particleA, particleB, restitution);        // resolve collision                         
                         }
                     }
                 }
@@ -204,9 +188,17 @@ namespace ParticleSim
 
                         float distanceSquared = displacement.LengthSquared();   // avoid sqrt for efficiency
                         float radiusSum = particleA.radius + particleB.radius;  // sum of radii
+                        
                         if (distanceSquared <= radiusSum * radiusSum)           // collision detected 
                         {
-                            ResolveCollisions(particleA, particleB, restitution);        // resolve collision                         
+                            if (frame == 1)
+                            {
+                                LabCollision(particleA, particleB);            // resolve collision in lab frame
+                            }
+                            else
+                            {
+                                CMCollision(particleA, particleB);             // resolve collision in center of mass frame
+                            }
                         }
                     }
                 }
@@ -291,137 +283,138 @@ namespace ParticleSim
         {
             if (particleA == null || particleB == null || particleA.mass <= 0f || particleB.mass <= 0f)
             {
-                return;                                 // null check and mass check
+                return;                                                                         // null check and mass check
             }
 
-            float velocityA = particleA.velocity.X;
+            float velocityA = particleA.velocity.X;                                             // get velocities
             float velocityB = particleB.velocity.X;
 
-            float gammaA = 1f / (float)Math.Sqrt(1f - velocityA * velocityA);
+            float gammaA = 1f / (float)Math.Sqrt(1f - velocityA * velocityA);                   // lorentz factors
             float gammaB = 1f / (float)Math.Sqrt(1f - velocityB * velocityB);
 
-            float momentumA = gammaA * particleA.mass * velocityA;
+            float momentumA = gammaA * particleA.mass * velocityA;                              // momenta
             float momentumB = gammaB * particleB.mass * velocityB;
-            float energyTotal = gammaA * particleA.mass + gammaB * particleB.mass; // total energy  
+            float energyTotal = gammaA * particleA.mass + gammaB * particleB.mass;              // total energy  
 
-            float velocityCoM = (momentumA + momentumB) / energyTotal;    // center of mass velocity
+            float velocityCoM = (momentumA + momentumB) / energyTotal;                          // center of mass velocity
 
-            float velocityACoM = (velocityA - velocityCoM) / (1f - velocityCoM * velocityA);   // velocity of A in CoM frame
-            float velocityBCoM = (velocityB - velocityCoM) / (1f - velocityCoM * velocityB);   // velocity of B in CoM frame
+            float velocityACoM = (velocityA - velocityCoM) / (1f - velocityCoM * velocityA);    // velocity of A in CoM frame
+            float velocityBCoM = (velocityB - velocityCoM) / (1f - velocityCoM * velocityB);    // velocity of B in CoM frame
 
-            velocityA = (velocityCoM + -velocityACoM) / (1f + velocityCoM * -velocityACoM); // A's new velocity in lab frame
-            velocityB = (velocityCoM + -velocityBCoM) / (1f + velocityCoM * -velocityBCoM); // B's new velocity in lab frame
+            velocityA = (velocityCoM + -velocityACoM) / (1f + velocityCoM * -velocityACoM);     // velocity of A in lab frame
+            velocityB = (velocityCoM + -velocityBCoM) / (1f + velocityCoM * -velocityBCoM);     // velocity of B in lab frame
 
-            particleA.velocity = new Vector2(velocityA, 0f);    // update velocities
+            particleA.velocity = new Vector2(velocityA, 0f);                                    // update velocities
             particleB.velocity = new Vector2(velocityB, 0f);
-
         }
 
         public void CMCollision(Particle particleA, Particle particleB)
         {
             if (particleA == null || particleB == null || particleA.mass <= 0f || particleB.mass <= 0f)
             {
-                return;                                 // null check and mass check
+                return;                                                                         // null check and mass check
             }
+           
+            float massA = particleA.mass;                                                       // get masses
+            float massB = particleB.mass;
+            float inverseMass = 1f / (massA + massB);   
 
-            float velocityA = particleA.velocity.X;
-            float velocityB = particleB.velocity.X;
+            float velocityA = (particleA.velocity.X * (massA - massB) + 2f * particleB.velocity.X * particleB.velocity.X) * inverseMass;       // get velocities
+            float velocityB = (particleB.velocity.X * (massB - massA) + 2f * massA * particleA.velocity.X) * inverseMass;
 
-            float gammaA = 1f / (float)Math.Sqrt(1f - velocityA * velocityA);
+            float gammaA = 1f / (float)Math.Sqrt(1f - velocityA * velocityA);                   // lorentz factors
             float gammaB = 1f / (float)Math.Sqrt(1f - velocityB * velocityB);
+                
+            float momentumA = gammaA * massA * velocityA;                                       // momenta
+            float momentumB = gammaB * massB * velocityB;
+            float energyTotal = gammaA * massA + gammaB * massB;                                // total energy  
 
-            float momentumA = gammaA * particleA.mass * velocityA;
-            float momentumB = gammaB * particleB.mass * velocityB;
-            float energyTotal = gammaA * particleA.mass + gammaB * particleB.mass; // total energy  
+            float velocityCoM = (momentumA + momentumB) / energyTotal;                          // center of momentum velocity
 
-            float velocityCoM = (momentumA + momentumB) / energyTotal;    // center of mass velocity
+            velocityA = (velocityA - velocityCoM) / (1f - velocityCoM * velocityA);             // new velocity of A 
+            velocityB = (velocityB - velocityCoM) / (1f - velocityCoM * velocityB);             // new velocity of B
 
-            velocityA = (velocityA - velocityCoM) / (1f - velocityCoM * velocityA);   // velocity of A in CoM frame
-            velocityB = (velocityB - velocityCoM) / (1f - velocityCoM * velocityB);   // velocity of B in CoM frame
-
-
-            particleA.velocity = new Vector2(velocityA, 0f);    // update velocities
+            particleA.velocity = new Vector2(velocityA, 0f);                                    // update velocities
             particleB.velocity = new Vector2(velocityB, 0f);
         }
 
         
         public void EnforceBoundary(Particle particle)
         {
-            int width = bounds[0];
+            int width = bounds[0];          // area dimensions
             int height = bounds[1];
 
-            Vector2 normal = new Vector2();
-            float impulse = 0f;
-            float impulseTotal = 0f;
+            Vector2 normal = new Vector2(); // normal vector for impulse
+            float impulse = 0f;             // impulse magnitude
+            float impulseTotal = 0f;        // total for frame
             
             if (particle == null)
             {
                 return;
             }
 
-            float radius = particle.radius;
-            
+            float radius = particle.radius;            
 
             // left boundary 
             if (particle.position.X - radius < 0f)
             {
                 normal = new Vector2(1, 0);
-                impulse = Vector2.Dot(particle.velocity, normal) * particle.mass;
-                impulseTotal += Math.Abs(impulse);
-                particle.position.X = radius;                   // reset position to boundary
-                particle.velocity.X = -particle.velocity.X;     // reverse velocity    
+                impulse = Vector2.Dot(particle.velocity, normal) * particle.mass; // calculate impulse
+                impulseTotal += Math.Abs(impulse);                                // add impulse
+                particle.position.X = radius;                                     // reset position to boundary
+                particle.velocity.X = -particle.velocity.X;                       // reverse velocity    
             }
 
             // right boundary
             if (particle.position.X + radius > width)
             {
                 normal = new Vector2(-1, 0);
-                impulse = Vector2.Dot(particle.velocity, normal) * particle.mass;
-                impulseTotal += Math.Abs(impulse);
-                particle.position.X = width - radius;           // reset position to boundary
-                particle.velocity.X = -particle.velocity.X;     // reverse velocity
+                impulse = Vector2.Dot(particle.velocity, normal) * particle.mass; // calculate impulse
+                impulseTotal += Math.Abs(impulse);                                // add impulse
+                particle.position.X = width - radius;                             // reset position to boundary
+                particle.velocity.X = -particle.velocity.X;                       // reverse velocity
             }
 
             // bottom boundary
             if (particle.position.Y + radius > height)
             {
                 normal = new Vector2(0, 1);
-                impulse = Vector2.Dot(particle.velocity, normal) * particle.mass;
-                impulseTotal += Math.Abs(impulse);
-                particle.position.Y = height - radius;          // reset position to boundary
-                particle.velocity.Y = -particle.velocity.Y;     // reverse velocity
+                impulse = Vector2.Dot(particle.velocity, normal) * particle.mass; // calculate impulse
+                impulseTotal += Math.Abs(impulse);                                // add impulse
+                particle.position.Y = height - radius;                            // reset position to boundary
+                particle.velocity.Y = -particle.velocity.Y;                       // reverse velocity
             }
 
             // top boundary
             if (particle.position.Y - radius < 0f)              
             {
                 normal = new Vector2(0, -1);
-                impulse = Vector2.Dot(particle.velocity, normal) * particle.mass;
-                impulseTotal += Math.Abs(impulse);
-                particle.position.Y = radius;                   // reset position to boundary
-                particle.velocity.Y = -particle.velocity.Y;     // reverse velocity    
+                impulse = Vector2.Dot(particle.velocity, normal) * particle.mass; // calculate impulse
+                impulseTotal += Math.Abs(impulse);                                // add impulse
+                particle.position.Y = radius;                                     // reset position to boundary
+                particle.velocity.Y = -particle.velocity.Y;                       // reverse velocity    
             }
 
-            impulseHistory.Enqueue(impulseTotal);
+            impulseHistory.Enqueue(impulseTotal);                                 // total impulse for pressure calc
         }
 
         public float GetPressure()
         {   
-            if (impulseHistory.Count >= 30)
+            if (impulseHistory.Count >= 30)                     // maintain fixed size queue
             {
-                impulseHistory.Dequeue();                
+                impulseHistory.Dequeue();                       // remove oldest entry
             }
 
-            float totalImpulse = 0f;
-            foreach(float impulse in impulseHistory)
+            float totalImpulse = 0f;                            
+            foreach (float impulse in impulseHistory)           // iterate through queue
             {
-                totalImpulse += impulse;
+                totalImpulse += impulse;                        // sum impulses
             }
                         
-            float wallLength = 2f * (bounds[0] + bounds[1]);      // total wall length
+            float wallLength = 2f * (bounds[0] + bounds[1]);    // total wall length
 
-            float interval = impulseHistory.Count / 30f;
-            float pressure = totalImpulse / (wallLength * interval);
+            float interval = impulseHistory.Count / 30f;        // time interval in seconds
+            float pressure = totalImpulse / (wallLength * interval);    // pressure calculation
 
             return pressure;
         }

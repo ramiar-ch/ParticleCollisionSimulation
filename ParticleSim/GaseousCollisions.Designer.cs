@@ -70,8 +70,6 @@
             // panelParticleGen
             // 
             this.panelParticleGen.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.panelParticleGen.Controls.Add(this.textBoxElasticity);
-            this.panelParticleGen.Controls.Add(this.textBoxHeat);
             this.panelParticleGen.Controls.Add(this.textBoxQuantity);
             this.panelParticleGen.Controls.Add(this.labelQuantity);
             this.panelParticleGen.Controls.Add(this.labelMass);
@@ -80,26 +78,22 @@
             this.panelParticleGen.Controls.Add(this.textBoxMass);
             this.panelParticleGen.Controls.Add(this.checkBoxGrid);
             this.panelParticleGen.Controls.Add(this.textBoxAvgSpeed);
-            this.panelParticleGen.Controls.Add(this.trackBarElasticity);
-            this.panelParticleGen.Controls.Add(this.trackBarHeat);
-            this.panelParticleGen.Controls.Add(this.labelHeat);
-            this.panelParticleGen.Controls.Add(this.labelElasticity);
             this.panelParticleGen.Controls.Add(this.buttonCreate);
             this.panelParticleGen.Location = new System.Drawing.Point(403, 448);
             this.panelParticleGen.Name = "panelParticleGen";
-            this.panelParticleGen.Size = new System.Drawing.Size(342, 269);
+            this.panelParticleGen.Size = new System.Drawing.Size(342, 219);
             this.panelParticleGen.TabIndex = 2;
             // 
             // textBoxElasticity
             // 
-            this.textBoxElasticity.Location = new System.Drawing.Point(285, 150);
+            this.textBoxElasticity.Location = new System.Drawing.Point(287, 108);
             this.textBoxElasticity.Name = "textBoxElasticity";
             this.textBoxElasticity.Size = new System.Drawing.Size(39, 22);
             this.textBoxElasticity.TabIndex = 23;
             // 
             // textBoxHeat
             // 
-            this.textBoxHeat.Location = new System.Drawing.Point(285, 117);
+            this.textBoxHeat.Location = new System.Drawing.Point(287, 75);
             this.textBoxHeat.Name = "textBoxHeat";
             this.textBoxHeat.Size = new System.Drawing.Size(39, 22);
             this.textBoxHeat.TabIndex = 22;
@@ -153,7 +147,7 @@
             this.checkBoxArrows.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
             this.checkBoxArrows.Font = new System.Drawing.Font("Tahoma", 10.2F);
             this.checkBoxArrows.ForeColor = System.Drawing.Color.White;
-            this.checkBoxArrows.Location = new System.Drawing.Point(171, 180);
+            this.checkBoxArrows.Location = new System.Drawing.Point(171, 124);
             this.checkBoxArrows.Name = "checkBoxArrows";
             this.checkBoxArrows.Size = new System.Drawing.Size(85, 25);
             this.checkBoxArrows.TabIndex = 17;
@@ -174,7 +168,7 @@
             this.checkBoxGrid.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
             this.checkBoxGrid.Font = new System.Drawing.Font("Tahoma", 10.2F);
             this.checkBoxGrid.ForeColor = System.Drawing.Color.White;
-            this.checkBoxGrid.Location = new System.Drawing.Point(91, 180);
+            this.checkBoxGrid.Location = new System.Drawing.Point(91, 124);
             this.checkBoxGrid.Name = "checkBoxGrid";
             this.checkBoxGrid.Size = new System.Drawing.Size(62, 25);
             this.checkBoxGrid.TabIndex = 14;
@@ -192,7 +186,7 @@
             // trackBarElasticity
             // 
             this.trackBarElasticity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.trackBarElasticity.Location = new System.Drawing.Point(117, 140);
+            this.trackBarElasticity.Location = new System.Drawing.Point(119, 98);
             this.trackBarElasticity.Name = "trackBarElasticity";
             this.trackBarElasticity.Size = new System.Drawing.Size(162, 56);
             this.trackBarElasticity.TabIndex = 16;
@@ -201,7 +195,7 @@
             // trackBarHeat
             // 
             this.trackBarHeat.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.trackBarHeat.Location = new System.Drawing.Point(117, 108);
+            this.trackBarHeat.Location = new System.Drawing.Point(119, 66);
             this.trackBarHeat.Name = "trackBarHeat";
             this.trackBarHeat.Size = new System.Drawing.Size(162, 56);
             this.trackBarHeat.TabIndex = 18;
@@ -213,7 +207,7 @@
             this.labelHeat.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
             this.labelHeat.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelHeat.ForeColor = System.Drawing.Color.White;
-            this.labelHeat.Location = new System.Drawing.Point(43, 115);
+            this.labelHeat.Location = new System.Drawing.Point(45, 73);
             this.labelHeat.Name = "labelHeat";
             this.labelHeat.Size = new System.Drawing.Size(45, 21);
             this.labelHeat.TabIndex = 19;
@@ -225,7 +219,7 @@
             this.labelElasticity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
             this.labelElasticity.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelElasticity.ForeColor = System.Drawing.Color.White;
-            this.labelElasticity.Location = new System.Drawing.Point(29, 147);
+            this.labelElasticity.Location = new System.Drawing.Point(31, 105);
             this.labelElasticity.Name = "labelElasticity";
             this.labelElasticity.Size = new System.Drawing.Size(77, 21);
             this.labelElasticity.TabIndex = 17;
@@ -234,7 +228,7 @@
             // buttonCreate
             // 
             this.buttonCreate.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonCreate.Location = new System.Drawing.Point(117, 215);
+            this.buttonCreate.Location = new System.Drawing.Point(117, 159);
             this.buttonCreate.Name = "buttonCreate";
             this.buttonCreate.Size = new System.Drawing.Size(96, 31);
             this.buttonCreate.TabIndex = 9;
@@ -245,11 +239,17 @@
             // panelStats
             // 
             this.panelStats.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
+            this.panelStats.Controls.Add(this.trackBarElasticity);
+            this.panelStats.Controls.Add(this.textBoxElasticity);
             this.panelStats.Controls.Add(this.labelPressure);
+            this.panelStats.Controls.Add(this.textBoxHeat);
             this.panelStats.Controls.Add(this.textBoxPressure);
+            this.panelStats.Controls.Add(this.labelElasticity);
+            this.panelStats.Controls.Add(this.labelHeat);
+            this.panelStats.Controls.Add(this.trackBarHeat);
             this.panelStats.Location = new System.Drawing.Point(31, 509);
             this.panelStats.Name = "panelStats";
-            this.panelStats.Size = new System.Drawing.Size(356, 208);
+            this.panelStats.Size = new System.Drawing.Size(356, 158);
             this.panelStats.TabIndex = 3;
             // 
             // labelPressure
@@ -258,7 +258,7 @@
             this.labelPressure.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
             this.labelPressure.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPressure.ForeColor = System.Drawing.Color.White;
-            this.labelPressure.Location = new System.Drawing.Point(42, 15);
+            this.labelPressure.Location = new System.Drawing.Point(34, 22);
             this.labelPressure.Name = "labelPressure";
             this.labelPressure.Size = new System.Drawing.Size(74, 21);
             this.labelPressure.TabIndex = 16;
@@ -266,7 +266,7 @@
             // 
             // textBoxPressure
             // 
-            this.textBoxPressure.Location = new System.Drawing.Point(122, 14);
+            this.textBoxPressure.Location = new System.Drawing.Point(125, 21);
             this.textBoxPressure.Name = "textBoxPressure";
             this.textBoxPressure.ReadOnly = true;
             this.textBoxPressure.Size = new System.Drawing.Size(162, 22);
@@ -314,7 +314,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
-            this.ClientSize = new System.Drawing.Size(772, 739);
+            this.ClientSize = new System.Drawing.Size(772, 692);
             this.Controls.Add(this.buttonArrowBack);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.buttonRunReset);

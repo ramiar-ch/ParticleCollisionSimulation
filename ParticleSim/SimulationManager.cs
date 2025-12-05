@@ -317,10 +317,13 @@ namespace ParticleSim
            
             float massA = particleA.mass;                                                       // get masses
             float massB = particleB.mass;
-            float inverseMass = 1f / (massA + massB);   
+            float inverseMass = 1f / (massA + massB);
 
-            float velocityA = (particleA.velocity.X * (massA - massB) + 2f * particleB.velocity.X * particleB.velocity.X) * inverseMass;       // get velocities
-            float velocityB = (particleB.velocity.X * (massB - massA) + 2f * massA * particleA.velocity.X) * inverseMass;
+            //float velocityA = (particleA.velocity.X * (massA - massB) + 2f * massB * particleB.velocity.X) * inverseMass;       // get velocities
+            //float velocityB = (particleB.velocity.X * (massB - massA) + 2f * massA * particleA.velocity.X) * inverseMass;
+
+            float velocityA = particleA.velocity.X;
+            float velocityB = particleB.velocity.X;
 
             float gammaA = 1f / (float)Math.Sqrt(1f - velocityA * velocityA);                   // lorentz factors
             float gammaB = 1f / (float)Math.Sqrt(1f - velocityB * velocityB);
@@ -331,8 +334,8 @@ namespace ParticleSim
 
             float velocityCoM = (momentumA + momentumB) / energyTotal;                          // center of momentum velocity
 
-            velocityA = (velocityA - velocityCoM) / (1f - velocityCoM * velocityA);             // new velocity of A 
-            velocityB = (velocityB - velocityCoM) / (1f - velocityCoM * velocityB);             // new velocity of B
+            velocityA = -(velocityA - velocityCoM) / (1f - velocityCoM * velocityA);             // new velocity of A 
+            velocityB = -(velocityB - velocityCoM) / (1f - velocityCoM * velocityB);             // new velocity of B
 
             particleA.velocity = new Vector2(velocityA, 0f);                                    // update velocities
             particleB.velocity = new Vector2(velocityB, 0f);

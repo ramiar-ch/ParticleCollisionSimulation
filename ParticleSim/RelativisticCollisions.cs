@@ -74,12 +74,34 @@ namespace ParticleSim
         private void panelCM_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;                                    
+            
+            if (checkBoxGrid.Checked == true)           // if option enabled
+            {
+                cmFrame.DrawGrid(g, panelCM);
+            }
+
+            if (checkBoxArrows.Checked == true)       // if option enabled
+            {
+                cmFrame.DrawArrows(g, cmParticles, panelCM, mode);
+            }
+
             cmFrame.RenderParticles(g, cmParticles, panelCM, mode);             // draw cm particles
         }
 
         private void panelLab_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
+            
+            if (checkBoxGrid.Checked == true)                                   // if option enabled
+            {
+                labFrame.DrawGrid(g, panelLab);
+            }
+
+            if (checkBoxArrows.Checked == true)                               // if option enabled
+            {
+                labFrame.DrawArrows(g, labParticles, panelLab, mode);
+            }
+
             labFrame.RenderParticles(g, labParticles, panelLab, mode);          // draw lab particles
         }
 
@@ -94,10 +116,12 @@ namespace ParticleSim
         {
             textBoxMassA.Clear();                                                        // clear input boxes after use
             trackBarVelocityA.Value = trackBarVelocityA.Minimum;                         // reset trackbar to minimum
+            textBoxVelocityA.Clear();                                                    // clear textboxes
             comboBoxColorA.SelectedIndex = 0;                                            // reset color selection to "Random"
 
             textBoxMassB.Clear();
-            trackBarVelocityB.Value = trackBarVelocityB.Minimum;                         
+            trackBarVelocityB.Value = trackBarVelocityB.Minimum;
+            textBoxVelocityB.Clear();
             comboBoxColorB.SelectedIndex = 0;
 
             timer.Stop();
@@ -124,8 +148,18 @@ namespace ParticleSim
                 return;
             }
 
-            float velocityA = trackBarVelocityA.Value / 100f;                           // get speed from trackbar
+            float velocityA = trackBarVelocityA.Value / 100f;                           // get speed from textbox
             float velocityB = trackBarVelocityB.Value / 100f;                                     
+
+            if (velocityA == 1f)                                                        // avoids lorentz factor going to infinity
+            {
+                velocityA = 0.999f;
+            }
+
+            if (velocityB == 1f)
+            {
+                velocityB = 0.999f;
+            }
 
             Color colorA = Color.FromArgb(rng.Next(256), rng.Next(256), rng.Next(256)); // random colour generation
 
@@ -219,6 +253,8 @@ namespace ParticleSim
 
         private void buttonClear_Click(object sender, EventArgs e)
         {
+            ClearInputs();
+
             labParticles.Clear();       // clear particle lists
             cmParticles.Clear();
             init.ClearParticles();
@@ -240,6 +276,66 @@ namespace ParticleSim
 
             TimeSpan elapsedCM = TimeSpan.FromTicks((long)(stopwatch.ElapsedTicks / gamma));                            // time dilation formula
             labelClockCM.Text = string.Format("CoM Time: {0:D2}:{1:D3}", elapsedCM.Seconds, elapsedCM.Milliseconds);    // update cm clock
+        }
+
+        private void trackBarVelocityA_Scroll(object sender, EventArgs e)
+        {
+            if (trackBarVelocityA.Value == 100)                                     // avoid velocity being 1c
+            {
+                trackBarVelocityA.Value = 99;
+            }
+            textBoxVelocityA.Text = $"{(float)trackBarVelocityA.Value / 100f}c";    // update text
+        }
+
+        private void trackBarVelocityB_Scroll(object sender, EventArgs e)
+        {
+            if (trackBarVelocityB.Value == 100)                                     // avoid velocity being 1c
+            {
+                trackBarVelocityB.Value = 99;
+            }
+            textBoxVelocityB.Text = $"{(float)trackBarVelocityB.Value / 100f}c";    // update text
+        }
+
+        private void textBoxVelocityA_TextChanged(object sender, EventArgs e)
+        {
+            if (float.TryParse(textBoxVelocityA.Text, out float velocityA))         // parse and validate velocity input 
+            {   
+                if (0 <= velocityA && velocityA < 100)                              // between trackbar values
+                {
+                    trackBarVelocityA.Value = (int)(velocityA);
+                }
+                else if (velocityA >= 100)                                          // avoid lorentz factor going to infinity
+                {
+                    trackBarVelocityA.Value = 99;
+                }
+            }
+        }
+
+        private void textBoxVelocityB_TextChanged(object sender, EventArgs e)
+        {
+            if (float.TryParse(textBoxVelocityB.Text, out float velocityB))         // parse and validate velocity input 
+            {   
+                if (0 <= velocityB && velocityB < 100)                             // between trackbar values
+                {
+                    trackBarVelocityB.Value = (int)(velocityB);
+                }
+                else if (velocityB >= 100)
+                {
+                    trackBarVelocityB.Value = 99;                                   // avoid lorentz factor going to infinity
+                }
+            }
+        }
+
+        private void checkBoxGrid_CheckedChanged(object sender, EventArgs e)
+        {
+            panelCM.Invalidate();
+            panelLab.Invalidate();
+        }
+
+        private void checkBoxArrows_CheckedChanged(object sender, EventArgs e)
+        {
+            panelCM.Invalidate();
+            panelLab.Invalidate();
         }
     }
 }

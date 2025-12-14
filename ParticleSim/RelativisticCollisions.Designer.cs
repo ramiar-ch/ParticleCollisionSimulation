@@ -137,6 +137,7 @@
             this.textBoxVelocityB.Size = new System.Drawing.Size(49, 22);
             this.textBoxVelocityB.TabIndex = 36;
             this.textBoxVelocityB.TextChanged += new System.EventHandler(this.textBoxVelocityB_TextChanged);
+            this.textBoxVelocityB.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxVelocityB_KeyPress);
             // 
             // textBoxVelocityA
             // 
@@ -145,6 +146,7 @@
             this.textBoxVelocityA.Size = new System.Drawing.Size(47, 22);
             this.textBoxVelocityA.TabIndex = 35;
             this.textBoxVelocityA.TextChanged += new System.EventHandler(this.textBoxVelocityA_TextChanged);
+            this.textBoxVelocityA.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxVelocityA_KeyPress);
             // 
             // buttonCreateParticle
             // 

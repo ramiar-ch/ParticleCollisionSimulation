@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ParticleSim
@@ -17,6 +13,7 @@ namespace ParticleSim
             panelDisplayArea.Visible = true;
         }
 
+        // draws particles
         public void RenderParticles(Graphics g, List<Particle> particles, Panel panelDisplayArea, int mode)
         {
             foreach (Particle p in particles)                                                                   // loops through each particle
@@ -43,6 +40,7 @@ namespace ParticleSim
             }
         }
 
+        // draws grid
         public void DrawGrid(Graphics g, Panel panelDisplayArea)
         {
             Pen gridPen = new Pen(Color.LightSalmon);
@@ -61,6 +59,7 @@ namespace ParticleSim
             }
         }
 
+        // draws velocity arrows for particles
         public void DrawArrows(Graphics g, List<Particle> particles, Panel panelDisplayArea, int mode)
         {
             float arrowLengthScale = 0.4f;                      // pixels per m/s

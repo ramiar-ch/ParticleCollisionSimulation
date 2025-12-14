@@ -31,21 +31,17 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GaseousCollisions));
             this.panelDisplayArea = new System.Windows.Forms.Panel();
             this.panelParticleGen = new System.Windows.Forms.Panel();
-            this.textBoxElasticity = new System.Windows.Forms.TextBox();
-            this.textBoxHeat = new System.Windows.Forms.TextBox();
             this.textBoxQuantity = new System.Windows.Forms.TextBox();
             this.labelQuantity = new System.Windows.Forms.Label();
             this.labelMass = new System.Windows.Forms.Label();
             this.labelAvgSpeed = new System.Windows.Forms.Label();
-            this.checkBoxArrows = new System.Windows.Forms.CheckBox();
             this.textBoxMass = new System.Windows.Forms.TextBox();
             this.checkBoxGrid = new System.Windows.Forms.CheckBox();
             this.textBoxAvgSpeed = new System.Windows.Forms.TextBox();
-            this.trackBarElasticity = new System.Windows.Forms.TrackBar();
+            this.buttonCreate = new System.Windows.Forms.Button();
+            this.textBoxHeat = new System.Windows.Forms.TextBox();
             this.trackBarHeat = new System.Windows.Forms.TrackBar();
             this.labelHeat = new System.Windows.Forms.Label();
-            this.labelElasticity = new System.Windows.Forms.Label();
-            this.buttonCreate = new System.Windows.Forms.Button();
             this.panelStats = new System.Windows.Forms.Panel();
             this.labelPressure = new System.Windows.Forms.Label();
             this.textBoxPressure = new System.Windows.Forms.TextBox();
@@ -53,7 +49,6 @@
             this.buttonRunReset = new System.Windows.Forms.Button();
             this.buttonArrowBack = new System.Windows.Forms.Button();
             this.panelParticleGen.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarElasticity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarHeat)).BeginInit();
             this.panelStats.SuspendLayout();
             this.SuspendLayout();
@@ -74,29 +69,14 @@
             this.panelParticleGen.Controls.Add(this.labelQuantity);
             this.panelParticleGen.Controls.Add(this.labelMass);
             this.panelParticleGen.Controls.Add(this.labelAvgSpeed);
-            this.panelParticleGen.Controls.Add(this.checkBoxArrows);
             this.panelParticleGen.Controls.Add(this.textBoxMass);
             this.panelParticleGen.Controls.Add(this.checkBoxGrid);
             this.panelParticleGen.Controls.Add(this.textBoxAvgSpeed);
             this.panelParticleGen.Controls.Add(this.buttonCreate);
             this.panelParticleGen.Location = new System.Drawing.Point(403, 448);
             this.panelParticleGen.Name = "panelParticleGen";
-            this.panelParticleGen.Size = new System.Drawing.Size(342, 219);
+            this.panelParticleGen.Size = new System.Drawing.Size(342, 195);
             this.panelParticleGen.TabIndex = 2;
-            // 
-            // textBoxElasticity
-            // 
-            this.textBoxElasticity.Location = new System.Drawing.Point(287, 108);
-            this.textBoxElasticity.Name = "textBoxElasticity";
-            this.textBoxElasticity.Size = new System.Drawing.Size(39, 22);
-            this.textBoxElasticity.TabIndex = 23;
-            // 
-            // textBoxHeat
-            // 
-            this.textBoxHeat.Location = new System.Drawing.Point(287, 75);
-            this.textBoxHeat.Name = "textBoxHeat";
-            this.textBoxHeat.Size = new System.Drawing.Size(39, 22);
-            this.textBoxHeat.TabIndex = 22;
             // 
             // textBoxQuantity
             // 
@@ -141,19 +121,6 @@
             this.labelAvgSpeed.TabIndex = 14;
             this.labelAvgSpeed.Text = "Avg. Speed";
             // 
-            // checkBoxArrows
-            // 
-            this.checkBoxArrows.AutoSize = true;
-            this.checkBoxArrows.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.checkBoxArrows.Font = new System.Drawing.Font("Tahoma", 10.2F);
-            this.checkBoxArrows.ForeColor = System.Drawing.Color.White;
-            this.checkBoxArrows.Location = new System.Drawing.Point(171, 124);
-            this.checkBoxArrows.Name = "checkBoxArrows";
-            this.checkBoxArrows.Size = new System.Drawing.Size(85, 25);
-            this.checkBoxArrows.TabIndex = 17;
-            this.checkBoxArrows.Text = "Arrows";
-            this.checkBoxArrows.UseVisualStyleBackColor = false;
-            // 
             // textBoxMass
             // 
             this.textBoxMass.Location = new System.Drawing.Point(117, 19);
@@ -168,7 +135,7 @@
             this.checkBoxGrid.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
             this.checkBoxGrid.Font = new System.Drawing.Font("Tahoma", 10.2F);
             this.checkBoxGrid.ForeColor = System.Drawing.Color.White;
-            this.checkBoxGrid.Location = new System.Drawing.Point(91, 124);
+            this.checkBoxGrid.Location = new System.Drawing.Point(134, 116);
             this.checkBoxGrid.Name = "checkBoxGrid";
             this.checkBoxGrid.Size = new System.Drawing.Size(62, 25);
             this.checkBoxGrid.TabIndex = 14;
@@ -183,19 +150,28 @@
             this.textBoxAvgSpeed.TabIndex = 16;
             this.textBoxAvgSpeed.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxAvgSpeed_KeyPress);
             // 
-            // trackBarElasticity
+            // buttonCreate
             // 
-            this.trackBarElasticity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.trackBarElasticity.Location = new System.Drawing.Point(119, 98);
-            this.trackBarElasticity.Name = "trackBarElasticity";
-            this.trackBarElasticity.Size = new System.Drawing.Size(162, 56);
-            this.trackBarElasticity.TabIndex = 16;
-            this.trackBarElasticity.Scroll += new System.EventHandler(this.trackBarElasticity_Scroll);
+            this.buttonCreate.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonCreate.Location = new System.Drawing.Point(117, 148);
+            this.buttonCreate.Name = "buttonCreate";
+            this.buttonCreate.Size = new System.Drawing.Size(96, 31);
+            this.buttonCreate.TabIndex = 9;
+            this.buttonCreate.Text = "CREATE";
+            this.buttonCreate.UseVisualStyleBackColor = true;
+            this.buttonCreate.Click += new System.EventHandler(this.buttonCreate_Click);
+            // 
+            // textBoxHeat
+            // 
+            this.textBoxHeat.Location = new System.Drawing.Point(283, 76);
+            this.textBoxHeat.Name = "textBoxHeat";
+            this.textBoxHeat.Size = new System.Drawing.Size(39, 22);
+            this.textBoxHeat.TabIndex = 22;
             // 
             // trackBarHeat
             // 
             this.trackBarHeat.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.trackBarHeat.Location = new System.Drawing.Point(119, 66);
+            this.trackBarHeat.Location = new System.Drawing.Point(115, 67);
             this.trackBarHeat.Name = "trackBarHeat";
             this.trackBarHeat.Size = new System.Drawing.Size(162, 56);
             this.trackBarHeat.TabIndex = 18;
@@ -207,49 +183,23 @@
             this.labelHeat.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
             this.labelHeat.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelHeat.ForeColor = System.Drawing.Color.White;
-            this.labelHeat.Location = new System.Drawing.Point(45, 73);
+            this.labelHeat.Location = new System.Drawing.Point(41, 74);
             this.labelHeat.Name = "labelHeat";
             this.labelHeat.Size = new System.Drawing.Size(45, 21);
             this.labelHeat.TabIndex = 19;
             this.labelHeat.Text = "Heat";
             // 
-            // labelElasticity
-            // 
-            this.labelElasticity.AutoSize = true;
-            this.labelElasticity.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.labelElasticity.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelElasticity.ForeColor = System.Drawing.Color.White;
-            this.labelElasticity.Location = new System.Drawing.Point(31, 105);
-            this.labelElasticity.Name = "labelElasticity";
-            this.labelElasticity.Size = new System.Drawing.Size(77, 21);
-            this.labelElasticity.TabIndex = 17;
-            this.labelElasticity.Text = "Elasticity";
-            // 
-            // buttonCreate
-            // 
-            this.buttonCreate.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonCreate.Location = new System.Drawing.Point(117, 159);
-            this.buttonCreate.Name = "buttonCreate";
-            this.buttonCreate.Size = new System.Drawing.Size(96, 31);
-            this.buttonCreate.TabIndex = 9;
-            this.buttonCreate.Text = "CREATE";
-            this.buttonCreate.UseVisualStyleBackColor = true;
-            this.buttonCreate.Click += new System.EventHandler(this.buttonCreate_Click);
-            // 
             // panelStats
             // 
             this.panelStats.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
-            this.panelStats.Controls.Add(this.trackBarElasticity);
-            this.panelStats.Controls.Add(this.textBoxElasticity);
             this.panelStats.Controls.Add(this.labelPressure);
             this.panelStats.Controls.Add(this.textBoxHeat);
             this.panelStats.Controls.Add(this.textBoxPressure);
-            this.panelStats.Controls.Add(this.labelElasticity);
             this.panelStats.Controls.Add(this.labelHeat);
             this.panelStats.Controls.Add(this.trackBarHeat);
             this.panelStats.Location = new System.Drawing.Point(31, 509);
             this.panelStats.Name = "panelStats";
-            this.panelStats.Size = new System.Drawing.Size(356, 158);
+            this.panelStats.Size = new System.Drawing.Size(356, 134);
             this.panelStats.TabIndex = 3;
             // 
             // labelPressure
@@ -258,7 +208,7 @@
             this.labelPressure.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(78)))), ((int)(((byte)(78)))), ((int)(((byte)(78)))));
             this.labelPressure.Font = new System.Drawing.Font("Tahoma", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPressure.ForeColor = System.Drawing.Color.White;
-            this.labelPressure.Location = new System.Drawing.Point(34, 22);
+            this.labelPressure.Location = new System.Drawing.Point(34, 30);
             this.labelPressure.Name = "labelPressure";
             this.labelPressure.Size = new System.Drawing.Size(74, 21);
             this.labelPressure.TabIndex = 16;
@@ -266,7 +216,7 @@
             // 
             // textBoxPressure
             // 
-            this.textBoxPressure.Location = new System.Drawing.Point(125, 21);
+            this.textBoxPressure.Location = new System.Drawing.Point(125, 29);
             this.textBoxPressure.Name = "textBoxPressure";
             this.textBoxPressure.ReadOnly = true;
             this.textBoxPressure.Size = new System.Drawing.Size(162, 22);
@@ -314,7 +264,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(52)))), ((int)(((byte)(52)))));
-            this.ClientSize = new System.Drawing.Size(772, 692);
+            this.ClientSize = new System.Drawing.Size(767, 670);
             this.Controls.Add(this.buttonArrowBack);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.buttonRunReset);
@@ -325,7 +275,6 @@
             this.Text = "GaseousCollisions";
             this.panelParticleGen.ResumeLayout(false);
             this.panelParticleGen.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarElasticity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarHeat)).EndInit();
             this.panelStats.ResumeLayout(false);
             this.panelStats.PerformLayout();
@@ -339,11 +288,8 @@
         private System.Windows.Forms.Panel panelParticleGen;
         private System.Windows.Forms.Button buttonCreate;
         private System.Windows.Forms.CheckBox checkBoxGrid;
-        private System.Windows.Forms.CheckBox checkBoxArrows;
-        private System.Windows.Forms.TrackBar trackBarElasticity;
         private System.Windows.Forms.TrackBar trackBarHeat;
         private System.Windows.Forms.Label labelHeat;
-        private System.Windows.Forms.Label labelElasticity;
         private System.Windows.Forms.Label labelQuantity;
         private System.Windows.Forms.Label labelMass;
         private System.Windows.Forms.Label labelAvgSpeed;
@@ -355,7 +301,6 @@
         private System.Windows.Forms.TextBox textBoxPressure;
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.Button buttonRunReset;
-        private System.Windows.Forms.TextBox textBoxElasticity;
         private System.Windows.Forms.TextBox textBoxHeat;
         private System.Windows.Forms.Button buttonArrowBack;
     }

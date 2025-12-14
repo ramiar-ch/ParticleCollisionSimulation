@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
 using System.Numerics;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ParticleSim
@@ -23,7 +18,6 @@ namespace ParticleSim
         private Timer timer;
         private int fps = 30;
         private bool running = false;        
-        private float restitution;
         private float heat;
         private int mode = 4; // gas mode
 
@@ -42,21 +36,15 @@ namespace ParticleSim
 
             simManager.SetBounds(panelDisplayArea.Width, panelDisplayArea.Height);
             panelDisplayArea.Invalidate();
-
-            trackBarElasticity.Minimum = 0;                                                 // set trackbar range
-            trackBarElasticity.Maximum = 1000;                                              // use 0-1000 scale for more precise control
-            trackBarElasticity.Value = trackBarElasticity.Maximum;                          // default to max elasticity (1.0)
-            trackBarElasticity.TickStyle = TickStyle.None;                                  // hide ticks
-            restitution = trackBarElasticity.Value / (float)trackBarElasticity.Maximum;     // initial restitution value             
-        
+            
             trackBarHeat.Minimum = 0;                                                       // set trackbar range
             trackBarHeat.Maximum = 1000;                                                    // use 0-1000 scale for more precise control
             trackBarHeat.Value = trackBarHeat.Maximum / 2;                                  // default to middle heat (0.5)
             trackBarHeat.TickStyle = TickStyle.None;                                        // hide ticks
             heat = trackBarHeat.Value / (float)trackBarHeat.Maximum;                        // initial heat value
-
         }
 
+        // renders display area, starting with the grid, then particles
         private void panelDisplayArea_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -68,57 +56,82 @@ namespace ParticleSim
             }
 
             List<Particle> particles = init.GetParticles();
-            displayFrame.RenderParticles(g, particles, panelDisplayArea, mode);
-
-            if (checkBoxArrows.Checked == true)         // if arrows enabled
-            {
-                displayFrame.DrawArrows(g, particles, panelDisplayArea, mode);
-            }
+            displayFrame.RenderParticles(g, particles, panelDisplayArea, mode);            
         }
 
+        // only digits, dp and control allowed
         private void textBoxMass_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allows digits, decimal point and control characters
             e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == '.' || char.IsControl(e.KeyChar));
         }
 
-
-
+        // only digits, dp, neg sign and control allowed
         private void textBoxAvgSpeed_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allows digits, decimal point and control characters
-            // also allows negative sign for speed so particles can move left
             e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == '.' || e.KeyChar == '-' || char.IsControl(e.KeyChar));
         }
 
+        // button to create a new particle based on user input
         private void buttonCreate_Click(object sender, EventArgs e)
         {
-            if (!float.TryParse(textBoxMass.Text, out float mass))                              // parse and validate mass input 
+            if (!float.TryParse(textBoxMass.Text, out float mass))                     // parse and validate mass input 
             {
-                MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBoxMass.Focus();
-                ClearInputs();
+                if (textBoxMass.Text == "")
+                {
+                    MessageBox.Show("Mass value cannot be empty.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxMass.Focus();
+                    ClearInputs();
+                }
+                else
+                {
+                    MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxMass.Focus();
+                    ClearInputs();
+                }
+                return;
+            }        
+
+            if (!float.TryParse(textBoxAvgSpeed.Text, out float avgSpeed))                    // parse and validate speed input
+            {
+                if (textBoxAvgSpeed.Text == "")
+                {
+                    MessageBox.Show("Speed value cannot be empty.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxAvgSpeed.Focus();
+                    ClearInputs();
+                }
+                else
+                {
+                    MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxAvgSpeed.Focus();
+                    ClearInputs();
+                }
                 return;
             }
 
-            if (!float.TryParse(textBoxAvgSpeed.Text, out float avgSpeed))                      // parse and validate speed input 
-            {
-                MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBoxAvgSpeed.Focus();
-                ClearInputs();
-                return;
-            }
-
-                
             if (!int.TryParse(textBoxQuantity.Text, out int quantity))                          // parse and validate quantity input
             {
                 MessageBox.Show("Quantity must be a positive integer.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBoxQuantity.Focus();
                 ClearInputs();
                 return;
+            }          
+
+            if (mass <= 0f || mass >= 1000)
+            {
+                MessageBox.Show("Mass value must be within accepted range.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxMass.Focus();
+                ClearInputs();
+                return;
+            }            
+
+            if (avgSpeed < 0f || avgSpeed >= 1000)
+            {
+                MessageBox.Show("Average speed must be within accepted range.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxAvgSpeed.Focus();
+                ClearInputs();
+                return;
             }
-            
-            
+
             for (int i = 0; i < quantity; i++)
             {
                 int[] bounds = new int[2];                                                      // area bounds
@@ -146,7 +159,8 @@ namespace ParticleSim
             panelDisplayArea.Invalidate();                                                      // redraw display area
             ClearInputs();                                                                                  
         }
-
+        
+        // clears input fields and resets selections
         private void ClearInputs()
         {
             textBoxMass.Clear();                                                        // clear input boxes after use
@@ -154,6 +168,7 @@ namespace ParticleSim
             textBoxQuantity.Clear();
         }
 
+        // button to start/pause simulation
         private void buttonRunReset_Click(object sender, EventArgs e)
         {
             if (running)                                // if simulation is running when the button is pressed
@@ -168,6 +183,7 @@ namespace ParticleSim
             }
         }
 
+        // button to clear all particles from the simulation
         private void buttonClear_Click(object sender, EventArgs e)
         {
             init.ClearParticles();                      // particle list is cleared and made empty
@@ -176,6 +192,7 @@ namespace ParticleSim
             panelDisplayArea.Invalidate();              // redraw the display area
         }
 
+        // loop to run simulation incl particle movement and collision detection
         private void StartSimulation()
         {
             StopSimulation();                                                       // ensures simulation is stopped before starting
@@ -200,6 +217,7 @@ namespace ParticleSim
             timer.Start();                                                          // start the timer
         }
 
+        // end simulation loop
         private void StopSimulation()
         {
             running = false;                                    // clear running flag
@@ -212,6 +230,7 @@ namespace ParticleSim
             }
         }
 
+        // button to go back to start menu
         private void buttonArrowBack_Click(object sender, EventArgs e)
         {
             Form form = new StartMenu();          // navigate back to start menu
@@ -219,15 +238,11 @@ namespace ParticleSim
             this.Hide();
         }
 
+        // trackbar to adjust heat value
         private void trackBarHeat_Scroll(object sender, EventArgs e)
         {
             heat = trackBarHeat.Value / (float)trackBarHeat.Maximum;    // update heat value based on trackbar position
             textBoxHeat.Text = Math.Round(heat * 100.0f).ToString();    // update heat textbox
-        }
-
-        private void trackBarElasticity_Scroll(object sender, EventArgs e)
-        {
-
-        }        
+        }              
     }
 }

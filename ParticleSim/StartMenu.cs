@@ -30,7 +30,7 @@ namespace ParticleSim
             };
         }
 
-        // Navigate() is a single method that handles all button click events
+        // navigate() is a single method that handles all button click events
         public void Navigate(object sender, EventArgs e)
         {
             // validation so that events only come from buttons
@@ -46,11 +46,6 @@ namespace ParticleSim
                 nextForm.Show();
                 this.Hide();
             }
-        }
-
-        private void StartMenu_Load(object sender, EventArgs e)
-        {
-
-        }
+        }       
     }
 }

@@ -117,13 +117,27 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="richTextBoxFAQ.Text" xml:space="preserve">
+    <value>1) What is this project meant to show?
+ - This project is designed to visualise the movement of particle bodies within a container and accurately model their collisions. It includes a general mode using classical mechanics, and even modes with gaseous and relativistic collisions.
+
+2) Who can use this project? 
+- Anyone with an interest in particle collisions can use this project, from experienced industry experts, to students who just want to see particles move on the screen.
+
+3) Can I move particles once placed? 
+- Yes, particles can be dragged and dropped for the first two modes. This is not applicable for the other two modes. 
+
+4) Can I modify values for my particles? 
+- Yes, this can be done in the classical modes. </value>
+  </data>
   <data name="richTextBoxPhysics.Text" xml:space="preserve">
     <value>This page is designed to give an overview of some physics concepts which users may find helpful. 
 
 Newtonian / Classical mechanics - this applies to particles moving at everyday speeds, and assumes that time and space are absolute. This is 'normal' mechanics, where laws such as F=ma, and p=mv apply.
 
 Relativistic mechanics - this applies when particles move near light speed, and classical mechanics begins to break down. In this model, time and space become relative and can vary depending on the observer. Momentum and energy are modified with the 'Lorentz factor'. This leads to particles behaving slightly differently, this can be viewed in the relativistic mode.
-</value>
+
+Kinetic theory - this is used in the gaseous mode to model the movements of many particles</value>
   </data>
   <data name="richTextBoxNav.Text" xml:space="preserve">
     <value>Start Menu Buttons:

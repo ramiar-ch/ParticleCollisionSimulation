@@ -155,7 +155,6 @@
             this.Controls.Add(this.btn1D);
             this.Name = "StartMenu";
             this.Text = "Start Menu";
-            this.Load += new System.EventHandler(this.StartMenu_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

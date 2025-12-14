@@ -34,8 +34,8 @@
             this.tabPhysics = new System.Windows.Forms.TabPage();
             this.richTextBoxPhysics = new System.Windows.Forms.RichTextBox();
             this.tabControlHelp = new System.Windows.Forms.TabControl();
-            this.richTextBoxNav = new System.Windows.Forms.RichTextBox();
             this.tabNavigation = new System.Windows.Forms.TabPage();
+            this.richTextBoxNav = new System.Windows.Forms.RichTextBox();
             this.tabFAQ.SuspendLayout();
             this.tabPhysics.SuspendLayout();
             this.tabControlHelp.SuspendLayout();
@@ -57,12 +57,13 @@
             // 
             this.richTextBoxFAQ.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(84)))), ((int)(((byte)(84)))), ((int)(((byte)(84)))));
             this.richTextBoxFAQ.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxFAQ.ForeColor = System.Drawing.Color.White;
             this.richTextBoxFAQ.Location = new System.Drawing.Point(21, 19);
             this.richTextBoxFAQ.Name = "richTextBoxFAQ";
             this.richTextBoxFAQ.ReadOnly = true;
             this.richTextBoxFAQ.Size = new System.Drawing.Size(555, 335);
             this.richTextBoxFAQ.TabIndex = 3;
-            this.richTextBoxFAQ.Text = "";
+            this.richTextBoxFAQ.Text = resources.GetString("richTextBoxFAQ.Text");
             // 
             // tabPhysics
             // 
@@ -99,18 +100,6 @@
             this.tabControlHelp.Size = new System.Drawing.Size(614, 410);
             this.tabControlHelp.TabIndex = 0;
             // 
-            // richTextBoxNav
-            // 
-            this.richTextBoxNav.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(84)))), ((int)(((byte)(84)))), ((int)(((byte)(84)))));
-            this.richTextBoxNav.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.richTextBoxNav.ForeColor = System.Drawing.Color.White;
-            this.richTextBoxNav.Location = new System.Drawing.Point(23, 20);
-            this.richTextBoxNav.Name = "richTextBoxNav";
-            this.richTextBoxNav.ReadOnly = true;
-            this.richTextBoxNav.Size = new System.Drawing.Size(555, 335);
-            this.richTextBoxNav.TabIndex = 0;
-            this.richTextBoxNav.Text = resources.GetString("richTextBoxNav.Text");
-            // 
             // tabNavigation
             // 
             this.tabNavigation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(84)))), ((int)(((byte)(84)))), ((int)(((byte)(84)))));
@@ -122,6 +111,18 @@
             this.tabNavigation.Size = new System.Drawing.Size(606, 376);
             this.tabNavigation.TabIndex = 0;
             this.tabNavigation.Text = "Navigation";
+            // 
+            // richTextBoxNav
+            // 
+            this.richTextBoxNav.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(84)))), ((int)(((byte)(84)))), ((int)(((byte)(84)))));
+            this.richTextBoxNav.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.richTextBoxNav.ForeColor = System.Drawing.Color.White;
+            this.richTextBoxNav.Location = new System.Drawing.Point(23, 20);
+            this.richTextBoxNav.Name = "richTextBoxNav";
+            this.richTextBoxNav.ReadOnly = true;
+            this.richTextBoxNav.Size = new System.Drawing.Size(555, 335);
+            this.richTextBoxNav.TabIndex = 0;
+            this.richTextBoxNav.Text = resources.GetString("richTextBoxNav.Text");
             // 
             // HelpGuide
             // 

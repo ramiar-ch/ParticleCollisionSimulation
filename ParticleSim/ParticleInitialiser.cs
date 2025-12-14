@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ParticleSim
@@ -19,8 +15,9 @@ namespace ParticleSim
         public ParticleInitialiser()
         {
             
-        }     
+        }
 
+        // adds new particle based on config dictionary
         public void AddNewParticle(Dictionary<string, object> config, int mode)
         {
             particleCount = particles.Count;
@@ -38,7 +35,8 @@ namespace ParticleSim
 
             ScaleRadii(particles, mode);
         }
-        
+
+        // creates particle profile for gas simulation
         public Particle AddGasParticle(SimulationManager simManager, Dictionary<string,object> config, int mode, float heat )
         {
             particleCount = particles.Count;
@@ -58,6 +56,7 @@ namespace ParticleSim
             return newParticle;
         }
 
+        // creates particle profile for relativistic simulation
         public Particle AddRelativisticParticle(Panel panel, float mass, float speed, Color color )
         {
             particleCount = particles.Count;        
@@ -85,17 +84,18 @@ namespace ParticleSim
             return newParticle;                                                             // return particle
         }
 
+        // uses gaussian to assign velocities to gas particles
         public Vector2 DistributeGasVelocities(float avgSpeed, float heat)
         {
-            float sigma = (float)(avgSpeed * Math.Sqrt(2.0 / Math.PI) * heat);
+            float sigma = (float)(avgSpeed * Math.Sqrt(2.0 / Math.PI) * heat);              // standard deviation adjusted by heat 
 
-            float velocityX = (float)MathNet.Numerics.Distributions.Normal.Sample(0, sigma);
+            float velocityX = (float)MathNet.Numerics.Distributions.Normal.Sample(0, sigma);// sample from normal distribution
             float velocityY = (float)MathNet.Numerics.Distributions.Normal.Sample(0, sigma);
 
             return new Vector2(velocityX, velocityY);
         }
 
-
+        // scales particle radii based on mass logarithmically
         public List<Particle> ScaleRadii(List<Particle> particles, int mode)
         {   
             if (mode == 1 || mode == 2)
@@ -132,6 +132,7 @@ namespace ParticleSim
             return particles;
         }
 
+        // calculates gas particle radius based on quantity and panel bounds
         public float GetGasRadius(int quantity, int[] bounds)
         {
             float areaPanel = bounds[0] * bounds[1];             // area of panel in pixels

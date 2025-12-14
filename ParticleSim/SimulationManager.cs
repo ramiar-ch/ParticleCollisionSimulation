@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
 using System.Drawing;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Security.Cryptography;
 
 namespace ParticleSim
 {
@@ -25,6 +19,7 @@ namespace ParticleSim
 
         }
 
+        // simulation bounds and quadtree initialization
         public void SetBounds(int width, int height)
         {
             bounds[0] = width;
@@ -33,11 +28,13 @@ namespace ParticleSim
             quadtree = new Quadtree(new RectangleF(0, 0, width, height), capacity: 6, maxDepth: 8); // initialize quadtree
         }
 
+        // set elasticity for collisions
         public void SetElasticity(float elasticity)
         {
             restitution = elasticity;
         }
 
+        // update positions
         public List<Particle> UpdateParticles(List<Particle> particles, float timeChange, int mode, float heat = 1)
         {
             List<Particle> updatedParticles = new List<Particle>(particles.Count);      // list to hold updated particles  
@@ -52,6 +49,7 @@ namespace ParticleSim
             return updatedParticles;                                                    // return updated particles
         }
 
+        // update positions with relativistic effects
         public List<Particle> UpdateRelativisticParticles(List<Particle> particles, float timeChange, int frame)
         {
             List<Particle> updatedParticles = new List<Particle>(2);        // new list of two particles
@@ -81,6 +79,7 @@ namespace ParticleSim
             return updatedParticles;
         }
 
+        // calculate center of mass velocity
         public float GetCMVelocity(List<Particle> particles)
         {
             float momentum = 0f;                            // initialise momentum and energy
@@ -97,8 +96,9 @@ namespace ParticleSim
             float velocityCM = momentum / energy;           // center of momentum velocity
 
             return velocityCM;
-        }        
+        }
 
+        // find valid position for new particle
         public Vector2 GetValidPosition(float radius)
         {   
             int width = bounds[0];                                      // area dimensions
@@ -147,6 +147,7 @@ namespace ParticleSim
             return new Vector2(fallbackX, fallbackY);               // return last generated position as fallback
         }
 
+        // detect and resolve collisions
         public void DetectCollisions(List<Particle> particles, int mode, int frame = 1)
         {
             if (particles == null || particles.Count < 2)
@@ -193,11 +194,11 @@ namespace ParticleSim
                         {
                             if (frame == 1)
                             {
-                                LabCollision(particleA, particleB);            // resolve collision in lab frame
+                                LabCollision(particleA, particleB);             // resolve collision in lab frame                                
                             }
                             else
                             {
-                                CMCollision(particleA, particleB);             // resolve collision in center of mass frame
+                                CMCollision(particleA, particleB);              // resolve collision in center of mass frame
                             }
                         }
                     }
@@ -245,6 +246,7 @@ namespace ParticleSim
             
         }
 
+        // resolve elastic/inelastic collisions
         public void ResolveCollisions(Particle particleA, Particle particleB, float restitution)
         {
             if (particleA == null || particleB == null || particleA.mass <= 0f || particleB.mass <= 0f)
@@ -279,6 +281,7 @@ namespace ParticleSim
             particleB.velocity = new Vector2(velocityB, particleB.velocity.Y);
         }
 
+        // resolve relativistic collisions in lab frame
         public void LabCollision(Particle particleA, Particle particleB)
         {
             if (particleA == null || particleB == null || particleA.mass <= 0f || particleB.mass <= 0f)
@@ -308,6 +311,7 @@ namespace ParticleSim
             particleB.velocity = new Vector2(velocityB, 0f);
         }
 
+        // resolve relativistic collisions in center of mass frame
         public void CMCollision(Particle particleA, Particle particleB)
         {
             if (particleA == null || particleB == null || particleA.mass <= 0f || particleB.mass <= 0f)
@@ -318,9 +322,6 @@ namespace ParticleSim
             float massA = particleA.mass;                                                       // get masses
             float massB = particleB.mass;
             float inverseMass = 1f / (massA + massB);
-
-            //float velocityA = (particleA.velocity.X * (massA - massB) + 2f * massB * particleB.velocity.X) * inverseMass;       // get velocities
-            //float velocityB = (particleB.velocity.X * (massB - massA) + 2f * massA * particleA.velocity.X) * inverseMass;
 
             float velocityA = particleA.velocity.X;
             float velocityB = particleB.velocity.X;
@@ -334,14 +335,14 @@ namespace ParticleSim
 
             float velocityCoM = (momentumA + momentumB) / energyTotal;                          // center of momentum velocity
 
-            velocityA = -(velocityA - velocityCoM) / (1f - velocityCoM * velocityA);             // new velocity of A 
-            velocityB = -(velocityB - velocityCoM) / (1f - velocityCoM * velocityB);             // new velocity of B
+            velocityA = -(velocityA - velocityCoM) / (1f - velocityCoM * velocityA);            // new velocity of A 
+            velocityB = -(velocityB - velocityCoM) / (1f - velocityCoM * velocityB);            // new velocity of B
 
             particleA.velocity = new Vector2(velocityA, 0f);                                    // update velocities
             particleB.velocity = new Vector2(velocityB, 0f);
         }
 
-        
+        // boundary enforcement and impulse calculation
         public void EnforceBoundary(Particle particle)
         {
             int width = bounds[0];          // area dimensions
@@ -401,6 +402,7 @@ namespace ParticleSim
             impulseHistory.Enqueue(impulseTotal);                                 // total impulse for pressure calc
         }
 
+        // pressure calculation based on impulse history
         public float GetPressure()
         {   
             if (impulseHistory.Count >= 30)                     // maintain fixed size queue
@@ -422,6 +424,7 @@ namespace ParticleSim
             return pressure;
         }
 
+        // quadtree operations
         public void InsertParticleToQuadtree(Particle particle)
         {
             if (quadtree != null && particle != null)           // null checks
@@ -430,6 +433,7 @@ namespace ParticleSim
             }
         }
 
+        // clear quadtree
         public void ClearQuadtree()
         {
             quadtree.Clear();                                   // clear quadtree

@@ -1,14 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Printing;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ParticleSim
@@ -51,7 +45,7 @@ namespace ParticleSim
 
             Dictionary<string, Color> colors = new Dictionary<string, Color>
             {
-                { "Random", Color.Empty },              // dictionary for colors
+                { "Random", Color.Empty },        // dictionary for colors
                 { "Red", Color.Red },
                 { "Green", Color.Green },
                 { "Blue", Color.Blue },
@@ -60,10 +54,10 @@ namespace ParticleSim
                 { "Cyan", Color.Cyan },
             };
 
-            comboBoxColorA.DataSource = new BindingSource(colors, null);                    // links combobox to colors dictionary
+            comboBoxColorA.DataSource = new BindingSource(colors, null);    // links combobox to colors dictionary
             comboBoxColorA.DisplayMember = "Key";
             comboBoxColorA.ValueMember = "Value";
-            comboBoxColorA.SelectedIndex = 0;                                               // default to "Random"
+            comboBoxColorA.SelectedIndex = 0;                               // default to "Random"
 
             comboBoxColorB.DataSource = new BindingSource(colors, null);
             comboBoxColorB.DisplayMember = "Key";
@@ -71,6 +65,7 @@ namespace ParticleSim
             comboBoxColorB.SelectedIndex = 0;                                                           
         }
 
+        // renders CM frame display area, starting with the grid, then particles
         private void panelCM_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;                                    
@@ -80,14 +75,15 @@ namespace ParticleSim
                 cmFrame.DrawGrid(g, panelCM);
             }
 
-            if (checkBoxArrows.Checked == true)       // if option enabled
+            if (checkBoxArrows.Checked == true)         // if option enabled
             {
                 cmFrame.DrawArrows(g, cmParticles, panelCM, mode);
             }
 
-            cmFrame.RenderParticles(g, cmParticles, panelCM, mode);             // draw cm particles
+            cmFrame.RenderParticles(g, cmParticles, panelCM, mode);     // draw cm particles
         }
 
+        // renders lab frame display area, starting with the grid, then particles
         private void panelLab_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -105,6 +101,7 @@ namespace ParticleSim
             labFrame.RenderParticles(g, labParticles, panelLab, mode);          // draw lab particles
         }
 
+        // navigates back to start menu
         private void buttonArrowBack_Click(object sender, EventArgs e)
         {
             Form form = new StartMenu();                                        // navigate back to start menu
@@ -112,6 +109,7 @@ namespace ParticleSim
             this.Hide();
         }
 
+        // clears input fields and resets selections
         private void ClearInputs()
         {
             textBoxMassA.Clear();                                                        // clear input boxes after use
@@ -133,34 +131,97 @@ namespace ParticleSim
 
         private void buttonCreateParticle_Click(object sender, EventArgs e)
         {
-
             if (!float.TryParse(textBoxMassA.Text, out float massA))                     // parse and validate mass input 
             {
-                MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBoxMassA.Focus();               
+                if (textBoxMassA.Text == "")
+                {
+                    MessageBox.Show("Mass value cannot be empty.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxMassA.Focus();
+                    ClearInputs();
+                }                
+                else
+                {
+                    MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxMassA.Focus();
+                    ClearInputs();
+                }
                 return;
             }
 
             if (!float.TryParse(textBoxMassB.Text, out float massB))                     // parse and validate mass input 
             {
-                MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBoxMassB.Focus();                
+                if (textBoxMassB.Text == "")
+                {
+                    MessageBox.Show("Mass value cannot be empty.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxMassB.Focus();
+                    ClearInputs();
+                }
+                else
+                {
+                    MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxMassB.Focus();
+                    ClearInputs();
+                }
+                return;
+            }
+
+            if (massA <= 0)                                                                // mass must be positive
+            {
+                MessageBox.Show("Mass values must be positive.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxMassA.Focus();
+                ClearInputs();
+                return;
+            }
+            else if (massA >= 1000000)
+            {
+                MessageBox.Show("Mass value too large.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxMassA.Focus();
+                ClearInputs();
+                return;
+            }
+
+            if (massB <= 0)
+            {
+                MessageBox.Show("Mass values must be positive.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxMassB.Focus();
+                ClearInputs();
+                return;
+            }
+            else if (massB >= 1000000)
+            {
+                MessageBox.Show("Mass value too large.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxMassB.Focus();
+                ClearInputs();
                 return;
             }
 
             float velocityA = trackBarVelocityA.Value / 100f;                           // get speed from textbox
             float velocityB = trackBarVelocityB.Value / 100f;                                     
 
-            if (velocityA == 1f)                                                        // avoids lorentz factor going to infinity
+            if (velocityA >= 1f)                                                        // avoids lorentz factor going to infinity
             {
                 velocityA = 0.999f;
             }
 
-            if (velocityB == 1f)
+            if (velocityB >= 1f)
             {
                 velocityB = 0.999f;
             }
 
+            if (velocityA < 0f)
+            {
+                MessageBox.Show("Velocity must be non-negative.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxVelocityA.Focus();
+                ClearInputs();
+                return;
+            }
+            if (velocityB < 0f)
+            {
+                MessageBox.Show("Velocity must be non-negative.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                textBoxVelocityB.Focus();
+                ClearInputs();
+                return;
+            }
             Color colorA = Color.FromArgb(rng.Next(256), rng.Next(256), rng.Next(256)); // random colour generation
 
             if (comboBoxColorA.SelectedValue is Color selColorA && selColorA != Color.Empty)
@@ -208,7 +269,14 @@ namespace ParticleSim
         {
             StopSimulation();       // ensures existing simulation stopped first
             
-            running = true;         // set running flag     
+            if (labParticles.Count == 0 || cmParticles.Count == 0)
+            {
+                MessageBox.Show("No particles to simulate. Please create particles first.", "No Particles", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                running = false;    // reset running flag
+                return;
+            }
+            running = true;         // set running flag
+
             timer.Start();          // start the timer
             stopwatch.Start();
         }
@@ -235,8 +303,9 @@ namespace ParticleSim
                 
             panelCM.Invalidate();                                                                           // redraw panels
             panelLab.Invalidate();
-        }        
+        }
 
+        // button to start/pause simulation
         private void buttonRun_Click(object sender, EventArgs e)
         {
             if (running)                                // if simulation running when button pressed
@@ -251,6 +320,7 @@ namespace ParticleSim
             }
         }
 
+        // button to clear all particles from the simulation
         private void buttonClear_Click(object sender, EventArgs e)
         {
             ClearInputs();
@@ -266,6 +336,7 @@ namespace ParticleSim
             stopwatch.Reset();
         }
 
+        // updates lab and cm clocks based on time dilation
         private void ClockUpdate()
         {
             TimeSpan elapsedLab = stopwatch.Elapsed;                                                                    // lab frame time
@@ -278,6 +349,7 @@ namespace ParticleSim
             labelClockCM.Text = string.Format("CoM Time: {0:D2}:{1:D3}", elapsedCM.Seconds, elapsedCM.Milliseconds);    // update cm clock
         }
 
+        // handles velocity A trackbar scroll event
         private void trackBarVelocityA_Scroll(object sender, EventArgs e)
         {
             if (trackBarVelocityA.Value == 100)                                     // avoid velocity being 1c
@@ -287,6 +359,7 @@ namespace ParticleSim
             textBoxVelocityA.Text = $"{(float)trackBarVelocityA.Value / 100f}c";    // update text
         }
 
+        // handles velocity B trackbar scroll event
         private void trackBarVelocityB_Scroll(object sender, EventArgs e)
         {
             if (trackBarVelocityB.Value == 100)                                     // avoid velocity being 1c
@@ -296,6 +369,7 @@ namespace ParticleSim
             textBoxVelocityB.Text = $"{(float)trackBarVelocityB.Value / 100f}c";    // update text
         }
 
+        // handles velocity A textbox change event
         private void textBoxVelocityA_TextChanged(object sender, EventArgs e)
         {
             if (float.TryParse(textBoxVelocityA.Text, out float velocityA))         // parse and validate velocity input 
@@ -311,11 +385,12 @@ namespace ParticleSim
             }
         }
 
+        // handles velocity B textbox change event
         private void textBoxVelocityB_TextChanged(object sender, EventArgs e)
         {
             if (float.TryParse(textBoxVelocityB.Text, out float velocityB))         // parse and validate velocity input 
             {   
-                if (0 <= velocityB && velocityB < 100)                             // between trackbar values
+                if (0 <= velocityB && velocityB < 100)                              // between trackbar values
                 {
                     trackBarVelocityB.Value = (int)(velocityB);
                 }
@@ -326,16 +401,30 @@ namespace ParticleSim
             }
         }
 
+        // grid enable/disable
         private void checkBoxGrid_CheckedChanged(object sender, EventArgs e)
         {
             panelCM.Invalidate();
             panelLab.Invalidate();
         }
 
+        // velocity arrow enable/disable
         private void checkBoxArrows_CheckedChanged(object sender, EventArgs e)
         {
             panelCM.Invalidate();
             panelLab.Invalidate();
+        }
+
+        // only digits, dp and control allowed
+        private void textBoxVelocityA_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == '.' || char.IsControl(e.KeyChar));
+        }
+
+        // only digits, dp and control allowed
+        private void textBoxVelocityB_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == '.' || char.IsControl(e.KeyChar));
         }
     }
 }

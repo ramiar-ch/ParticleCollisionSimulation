@@ -1,17 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Text;
-using System.Linq;
 using System.Numerics;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ParticleSim
@@ -57,7 +48,7 @@ namespace ParticleSim
             trackBarElasticity.TickStyle = TickStyle.None;                                  // hide ticks
             restitution = trackBarElasticity.Value / (float)trackBarElasticity.Maximum;     // initial restitution value
                                                                                           
-            Dictionary<string, Color> colors = new Dictionary<string, Color>
+            Dictionary<string, Color> colors = new Dictionary<string, Color>                // dictionary to hold all colours
             {
                 { "Random", Color.FromArgb(rng.Next(256), rng.Next(256), rng.Next(256)) },
                 { "Red", Color.Red },
@@ -79,6 +70,7 @@ namespace ParticleSim
             comboBoxColorModifier.SelectedIndex = -1;                                       // default to no selection
         }
 
+        // renders display area, starting with the grid, then particles, then arrows
         private void panelDisplayArea_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
@@ -98,52 +90,71 @@ namespace ParticleSim
             }
         }
 
+
+        // only digits, dp and control allowed
         private void textBoxMass_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allows digits, decimal point and control characters
             e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == '.' || char.IsControl(e.KeyChar)); 
         }
 
+        // only digits, dp, neg sign and control allowed
         private void textBoxSpeed_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // only allows digits, decimal point and control characters
-            // also allows negative sign for speed so particles can move left
             e.Handled = !(char.IsDigit(e.KeyChar) || e.KeyChar == '.' || e.KeyChar == '-' || char.IsControl(e.KeyChar));
         }
-        
 
+        // button to create a new particle based on user input
         private void buttonCreateParticle_Click(object sender, EventArgs e)
         {
             if (!float.TryParse(textBoxMass.Text, out float mass) )                     // parse and validate mass input 
-            {                 
-                MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBoxMass.Focus();
-                ClearInputs();
+            {   
+                if (textBoxMass.Text == "")
+                {
+                    MessageBox.Show("Mass value cannot be empty.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxMass.Focus();
+                    ClearInputs();
+                }
+                else
+                {
+                    MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxMass.Focus();
+                    ClearInputs();
+                }                    
                 return;
             }
 
             if (!float.TryParse(textBoxSpeed.Text, out float speed))                    // parse and validate speed input
-            {   
-                MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                textBoxSpeed.Focus();
-                ClearInputs();
+            {
+                if (textBoxSpeed.Text == "")
+                {
+                    MessageBox.Show("Speed value cannot be empty.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxSpeed.Focus();
+                    ClearInputs();                    
+                }
+                else
+                {
+                    MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxSpeed.Focus();
+                    ClearInputs();                    
+                }
                 return;
             }
 
-            if (mass <= 0f)
+            if (mass <= 0f || mass >= 1000)
             {
-                MessageBox.Show("Mass value must be positive.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Mass value must be within accepted range.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBoxMass.Focus();
                 ClearInputs();
                 return;
-            }
-            if (speed.Equals(null))
+            }            
+            
+            if (speed < -1000 || speed > 1000)
             {
-                MessageBox.Show("Speed value cannot be empty.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Speed value must be within accepted range. Maximum value is 1000.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBoxSpeed.Focus();
                 ClearInputs();
                 return;
-            }
+            }            
 
             float x = (float)rng.NextDouble() * panelDisplayArea.Width;                 // random x position within panel bounds
             float y = (float)rng.NextDouble() * panelDisplayArea.Height;                // random y position within panel bounds
@@ -163,12 +174,13 @@ namespace ParticleSim
                 { "color", color }
             };
 
-            init.AddNewParticle(particleConfig, mode);                                        // adds new particle to the list
+            init.AddNewParticle(particleConfig, mode);                                  // adds new particle to the list
             panelDisplayArea.Invalidate();                                              // refresh
 
             ClearInputs();
-        }      
-        
+        }
+
+        // clears input fields and resets selections
         private void ClearInputs()
         {
             textBoxMass.Clear();                                                        // clear input boxes after use
@@ -176,6 +188,7 @@ namespace ParticleSim
             comboBoxColor.SelectedIndex = 0;                                            // reset color selection to "Random"
         }
 
+        // button to start/pause simulation
         private void buttonRunReset_Click(object sender, EventArgs e)
         {
             if (running)                                // if simulation is running when the button is pressed
@@ -190,17 +203,20 @@ namespace ParticleSim
             }
         }
 
+        // button to clear all particles from the simulation
         private void buttonClear_Click(object sender, EventArgs e)
         {
             init.ClearParticles();                      // particle list is cleared and made empty
             panelDisplayArea.Invalidate();              // redraw the display area
         }
 
+        // checkbox to toggle grid display
         private void checkBoxGrid_CheckedChanged(object sender, EventArgs e)
         {
             panelDisplayArea.Invalidate();              // redraw the display area
         }
 
+        // loop to run simulation incl particle movement and collision detection
         private void StartSimulation()
         {
             StopSimulation();                                   // ensures that any existing simulation is stopped first
@@ -222,6 +238,7 @@ namespace ParticleSim
             timer.Start();                                      // start the timer
         }
 
+        // end simulation loop
         private void StopSimulation()
         {   
             running = false;                                    // clear running flag
@@ -234,12 +251,14 @@ namespace ParticleSim
             }                           
         }
 
+        // trackbar for elasticity
         private void trackBarElasticity_Scroll(object sender, EventArgs e)
         {
             restitution = trackBarElasticity.Value / (float)trackBarElasticity.Maximum;   // get restitution value between 0 and 1          
             simManager.SetElasticity(restitution);                                        // update simulation manager with new restitution value
         }
 
+        // mouse events for selecting particles
         private void panelDisplayArea_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left)                          // only respond to left mouse button
@@ -260,7 +279,7 @@ namespace ParticleSim
                 float headLength = radius * headLengthScale;            // length of arrowhead
                 float headWidth = radius * headWidthScale;              // width of arrowhead
 
-                Vector2 velocity = p.velocity;                             // get velocity vector
+                Vector2 velocity = p.velocity;                              // get velocity vector
                 float speed = velocity.Length();                            // speed is the length of the velocity vector
 
                 Vector2 normal = velocity / speed;                          // normalize velocity to get direction
@@ -311,6 +330,7 @@ namespace ParticleSim
             }
         }
 
+        // mouse move event for dragging selected particle
         private void panelDisplayArea_MouseMove(object sender, MouseEventArgs e)
         {
             int mousePosX = e.X;                               // current mouse position
@@ -336,39 +356,77 @@ namespace ParticleSim
             panelDisplayArea.Invalidate();
         }
 
+        // mouse up event to stop dragging
         private void panelDisplayArea_MouseUp(object sender, MouseEventArgs e)
         {
             if (draggingParticle == true || selectedParticle != null)           // if not dragging or no particle selected
             {
-                draggingParticle = false;                                           // disable dragging
-                selectedParticle = null;                                            // clear selected particle
+                draggingParticle = false;                                       // disable dragging
+                selectedParticle = null;                                        // clear selected particle
                 return;
             }
         }
 
+        // button to apply modifications to selected particle
         private void buttonModifyParticle_Click(object sender, EventArgs e)
         {
-            if (particleToModify == null)                                                           // no particle selected to modify
+            if (particleToModify == null)                                                         // no particle selected to modify
             {
                 MessageBox.Show("No particle selected to modify. Click on a particle to select it.", "No particle selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
+            }       
+
+            if (!float.TryParse(textBoxMassModifier.Text, out float newMass))                     // parse and validate mass input 
+            {
+                if (textBoxMassModifier.Text == "")
+                {
+                    MessageBox.Show("Mass value cannot be empty.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxMassModifier.Focus();
+                    ClearInputs();
+                }
+                else
+                {
+                    MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxMassModifier.Focus();
+                    ClearInputs();
+                }
+                return;
             }
 
-            if (!float.TryParse(textBoxMassModifier.Text, out float newMass))                       // parse and validate mass input 
+            if (!float.TryParse(textBoxSpeedModifier.Text, out float newSpeed))                    // parse and validate speed input
             {
-                MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (textBoxSpeedModifier.Text == "")
+                {
+                    MessageBox.Show("Speed value cannot be empty.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxSpeedModifier.Focus();
+                    ClearInputs();
+                }
+                else
+                {
+                    MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    textBoxSpeedModifier.Focus();
+                    ClearInputs();
+                }
+                return;
+            }
+
+            if (newMass <= 0f || newMass >= 1000)
+            {
+                MessageBox.Show("Mass value must be within accepted range.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBoxMassModifier.Focus();
+                ClearInputs();
                 return;
             }
 
-            if (!float.TryParse(textBoxSpeedModifier.Text, out float newSpeed))                     // parse and validate speed input
+            if (newSpeed < -1000 || newSpeed > 1000)
             {
-                MessageBox.Show("Fields must be numeric.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Speed value must be within accepted range. Maximum value is 1000.", "Invalid input", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 textBoxSpeedModifier.Focus();
+                ClearInputs();
                 return;
             }
 
-            Vector2 newVelocity = new Vector2(newSpeed, 0);                                                      // new velocity vector
+            Vector2 newVelocity = new Vector2(newSpeed, 0);           // new velocity vector
 
             particleToModify.mass = newMass;                          // update mass
             particleToModify.velocity = newVelocity;                  // update velocity
@@ -378,10 +436,11 @@ namespace ParticleSim
                 particleToModify.color = selColor;                    // update color
             }
 
-            init.ScaleRadii(init.GetParticles(), mode);                     // rescale radii based on new mass
+            init.ScaleRadii(init.GetParticles(), mode);               // rescale radii based on new mass
             panelDisplayArea.Invalidate();                            // refresh display
         }
 
+        // button to go back to start menu
         private void buttonArrowBack_Click(object sender, EventArgs e)
         {
             Form form = new StartMenu();          // navigate back to start menu

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace ParticleSim
 {
     internal class Quadtree
     {
+        // node class
         private class Node
         {
             private RectangleF bounds;         
@@ -28,6 +24,7 @@ namespace ParticleSim
                 this.depth = depth;
             }
 
+            // insert particle into node
             public bool Insert(Particle particle)
             {
                 PointF point = new PointF(particle.position.X, particle.position.Y);    // particle position as PointF
@@ -61,6 +58,7 @@ namespace ParticleSim
                 return true;                                                            // fallback but should not reach here
             }
 
+            // subdivide node into 4 children
             private void Subdivide()
             {
                 children = new Node[4];                                                 // create 4 child nodes       
@@ -79,7 +77,8 @@ namespace ParticleSim
                     Insert(particle);                                                   // re-insert particles into children
                 }      
             }
-            
+
+            // query particles within range
             public void Query(RectangleF range, List<Particle> results)
             {
                 if (!bounds.IntersectsWith(range))                                      // if no intersection, return
@@ -105,6 +104,7 @@ namespace ParticleSim
                 }
             }
 
+            // clear the node
             public void Clear()
             {
                 particles.Clear();                               // clear particles
@@ -121,16 +121,19 @@ namespace ParticleSim
 
         private Node root;
 
+        // quadtree constructor
         public Quadtree(RectangleF bounds, int capacity, int maxDepth)
         {
             root = new Node(bounds, capacity, maxDepth, 0);                             // create root node
         }
 
+        // insert particle into quadtree
         public bool Insert(Particle particle)
         {
             return root.Insert(particle);                                               // insert particle into quadtree
         }
 
+        // query particles within range
         public List<Particle> Query(RectangleF range)
         {
             List<Particle> results = new List<Particle>();                              // list to hold results
@@ -138,10 +141,10 @@ namespace ParticleSim
             return results;                                                             // return found particles
         }
 
+        // clear the quadtree
         public void Clear()
         {
             root.Clear();                                                               // clear the quadtree
         }
     }
-}
-    
+}    
